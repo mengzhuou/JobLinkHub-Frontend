@@ -1,0 +1,17 @@
+{
+  "name": "joblinkhub-frontend",
+  "version": "1.0.0",
+  "description": "Frontend Initial Setup 1. make sure your local branch is up to date 2. go inside \"frontend\" directory 3. run \"npm install\" (this is to install the dependencies from liberary) 4. run \"npm start\" (this is to ONLY start the frontend in port 3000)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "react-scripts start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react-router-dom": "^6.26.2",
+    "react-scripts": "^5.0.1"
+  }
+}

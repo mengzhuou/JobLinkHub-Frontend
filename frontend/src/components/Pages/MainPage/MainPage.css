@@ -2,16 +2,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
     height: 100vh;
     background-color: #f0f0f0;
-    padding: 0;
-    overflow: hidden; /* Hide the scrollbar */
+    padding: 350px;
+    /* overflow: hidden; */
 }
 
 .main-page-container {
     width: 90%;
-    height: 100%;
+    height: 0;
     max-width: 1200px;
     background-color: #ffffff;
     border-radius: 8px;

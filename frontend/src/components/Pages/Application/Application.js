@@ -69,6 +69,7 @@ class ApplicationForm extends Component {
             const response = await createRecord(recordData);
             alert("Thank you! Your record has been saved.")
             console.log('Record created:', response);
+            window.location.href = '/';
         } catch (error) {
             console.error('Error creating record:', error);
             alert("Whoops, something is wrong.")

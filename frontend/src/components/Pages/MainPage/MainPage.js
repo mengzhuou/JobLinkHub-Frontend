@@ -16,16 +16,32 @@ class MainPage extends Component {
         };
     }
 
+    componentDidMount() {
+        const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        
+        if (isAuthenticated && userInfo) {
+            this.setState({ isAuthenticated, userInfo });
+        }
+    }
+
     handleLoginSuccess = async (credentialResponse) => {
         const token = credentialResponse.credential;
         try {
-            const user = await verifyGoogleLogin(token);
-            console.log('User logged in successfully:', user);
+            const response = await verifyGoogleLogin(token);
+            console.log('User logged in successfully:', response);
     
-            this.setState({ isAuthenticated: true, userInfo: user });
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('userInfo', JSON.stringify(response.user));
+    
+            this.setState({ isAuthenticated: true, userInfo: response.user });
         } catch (error) {
             console.error('Google login failed:', error);
         }
+    };
+
+    handleLoginError = () => {
+        console.error('Google login failed');
     };
 
     render() {
