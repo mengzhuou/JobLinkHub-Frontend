@@ -74,3 +74,7 @@
 .dropdown-content:last-child {
     border-bottom: none;
 }
+
+.navTitle {
+    cursor: pointer;
+}
