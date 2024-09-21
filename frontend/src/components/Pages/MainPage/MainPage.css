@@ -5,12 +5,12 @@
     /* justify-content: center; */
     height: 100vh;
     background-color: #f0f0f0;
-    padding: 350px;
+    padding: 310px;
     /* overflow: hidden; */
 }
 
 .main-page-container {
-    width: 90%;
+    width: 100vw;
     height: 0;
     max-width: 1200px;
     background-color: #ffffff;
@@ -19,7 +19,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0; /* Remove padding */
+    padding: 0;
 }
 
 .record-table-section {
@@ -38,7 +38,7 @@
 }
 
 html, body {
-    overflow: hidden; /* Globally hide scrollbars */
+    overflow: hidden; 
     padding: 0;
     margin: 0;
     height: 100%;

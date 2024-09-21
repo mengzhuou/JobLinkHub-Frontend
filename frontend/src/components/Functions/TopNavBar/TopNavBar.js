@@ -4,8 +4,7 @@ import './TopNavBar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-regular-svg-icons';
 import { faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
-
-
+import { googleLogout } from '@react-oauth/google';
 
 class TopNavBar extends Component {
     constructor(props) {
@@ -33,13 +32,24 @@ class TopNavBar extends Component {
         this.toggleDropdown(); 
     }
 
-    logoutNav = () => {
-        // goes to EnterCode page for now
+    logoutNav = () => {    
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('userInfo');
+        localStorage.removeItem('token'); 
+        console.log("Authentication info removed from localStorage");
+    
+        googleLogout();
+        console.log("Logged out from Google");
+    
         this.props.navigate("/");
-        const { isDroppedDown } = this.state;
-        this.setState({isDroppedDown: !isDroppedDown})
-    }
-
+        console.log("Navigated to home");    
+        window.location.reload();
+        this.setState({ isDroppedDown: false });
+    }   
+    profileNav = () => {
+        this.props.navigate("/profile");
+        this.toggleDropdown();
+    };
     navigateHome = () => {
         this.props.navigate("/");  
     }
@@ -60,7 +70,7 @@ class TopNavBar extends Component {
                         <FontAwesomeIcon icon={isDroppedDown? faAngleUp: faAngleDown} onClick={this.toggleDropdown}/>
                         {isDroppedDown && (
                             <div className="dropdown-container">
-                                <div className="dropdown-content">Profile</div>
+                                <div className="dropdown-content" onClick={this.profileNav}>Profile</div>
                                 <div className="dropdown-content" onClick={this.logoutNav}>Logout</div>
                                 <div className="dropdown-content" onClick={this.applicationNav}>Application</div>
                                 <div className="dropdown-content">Notification</div>
