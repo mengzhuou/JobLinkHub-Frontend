@@ -11,6 +11,7 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
     width: 400px;
     display: flex;
     flex-direction: column;
@@ -28,7 +29,7 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .application-form textarea {
@@ -43,7 +44,7 @@
     padding: 10px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1rem;
     text-align: center;
 }
 
@@ -53,7 +54,7 @@
 
 .line {
     display: flex;
-    gap:57px
+    gap: 5%;
 }
 
 .comment-info {
@@ -71,4 +72,13 @@
 
 label span {
     color: red;
+}
+
+@media (max-width: 768px) {
+    .application-form {
+        width: 90%;
+    }
+    .submit-button {
+        font-size: 0.9rem;
+    }
 }

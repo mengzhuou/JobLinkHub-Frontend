@@ -14,13 +14,29 @@ class RecordTable extends Component {
             columnDefs: [
                 { headerName: "Company", field: "company", sortable: true, filter: true, width: 230 },
                 { headerName: "Type", field: "type", sortable: true, filter: true, width: 130 },
-                { headerName: "Job Title", field: "jobTitle", sortable: true, filter: true, width: 230 },
+                { 
+                    headerName: "Job Title", 
+                    field: "jobTitle", 
+                    sortable: true, 
+                    filter: true, 
+                    width: 200,
+                    valueFormatter: (params) => {
+                        if (params.value) {
+                            return params.value.replace(/\w\S*/g, (txt) => {
+                                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                            });
+                        } else {
+                            return '';
+                        }
+                    }
+                },
                 { 
                     headerName: "Date", 
                     field: "date", 
                     sortable: true, 
                     filter: true, 
                     width: 120,
+                    sort: 'desc',
                     valueFormatter: (params) => {
                         if (!params.value) {
                             return 'No Date Provided';
@@ -35,15 +51,21 @@ class RecordTable extends Component {
                         }
                     }
                 },
-                { headerName: "Interview", field: "receivedInterview", sortable: true, filter: true, width: 110 },
+                { headerName: "Interview", field: "receivedInterview", sortable: true, filter: true, width: 120 },
                 { 
                     headerName: "Link", 
                     field: "websiteLink", 
                     width: 95,
                     cellRenderer: LinkButton
                 },
-                { headerName: "Comment", field: "comment", sortable: true, filter: true, width: 100 },
-                { headerName: "Click", field: "click", sortable: true, filter: true, width: 80 },
+                { 
+                    headerName: "Comment", 
+                    field: "comment", 
+                    sortable: true, 
+                    width: 120,
+                    tooltipField: "comment", 
+                },
+                { headerName: "Click", field: "click", sortable: true, width: 100 },
             ]
         };
     }
@@ -71,7 +93,12 @@ class RecordTable extends Component {
                         <AgGridReact
                             rowData={this.state.records}
                             columnDefs={this.state.columnDefs}
-                            defaultColDef={this.state.defaultColDef}
+                            defaultColDef={{
+                                tooltipComponentParams: { color: '#ececec' }, 
+                                tooltipShowDelay: 0,  
+                                tooltipHideDelay: 2000, 
+                            }}
+                            tooltipShowDelay={0} 
                         />
                     )}
                 </div>

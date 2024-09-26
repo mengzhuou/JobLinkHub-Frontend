@@ -75,50 +75,23 @@ const createRecord = async (data) => {
     }
 };
 
-export const getApplications = async (userId) => {
-    const token = localStorage.getItem('token');
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    };
-    const response = await axios.get(`/applications/${userId}`, config);
-    return response.data;
+const updateRecord = async (id, data) => {
+    try {
+        const res = await axios.put(`${BACKEND_URL}/records/${id}`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return res.data;
+    } catch (error) {
+        console.error(`Error updating record with ID ${id}:`, error);
+        throw error;
+    }
 };
 
-export const deleteApplication = async (appId) => {
-    const token = localStorage.getItem('token');
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    };
-    await axios.delete(`/applications/${appId}`, config);
-};
-
-export const updateApplication = async (appId, applicationData) => {
-    const token = localStorage.getItem('token');
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    };
-    const response = await axios.put(`/applications/${appId}`, applicationData, config);
-    return response.data;
-};
-
-export const getApplicationById = async (appId) => {
-    const token = localStorage.getItem('token');
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    };
-    const response = await axios.get(`/applications/${appId}`, config);
-    return response.data;
-};
 export {
     getRecords,
     createRecord,
     verifyGoogleLogin,
+    updateRecord,
 };
