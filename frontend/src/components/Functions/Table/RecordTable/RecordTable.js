@@ -20,6 +20,7 @@ class RecordTable extends Component {
                     sortable: true, 
                     filter: true, 
                     width: 200,
+                    tooltipField: "jobTitle",
                     valueFormatter: (params) => {
                         if (params.value) {
                             return params.value.replace(/\w\S*/g, (txt) => {
@@ -93,11 +94,11 @@ class RecordTable extends Component {
                         <AgGridReact
                             rowData={this.state.records}
                             columnDefs={this.state.columnDefs}
-                            defaultColDef={{
-                                tooltipComponentParams: { color: '#ececec' }, 
-                                tooltipShowDelay: 0,  
-                                tooltipHideDelay: 2000, 
-                            }}
+                            // defaultColDef={{
+                            //     tooltipComponentParams: { color: '#ececec' }, 
+                            //     tooltipShowDelay: 0,  
+                            //     tooltipHideDelay: 2000, 
+                            // }}
                             tooltipShowDelay={0} 
                         />
                     )}

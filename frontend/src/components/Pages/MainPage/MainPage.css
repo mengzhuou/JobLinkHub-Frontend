@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     /* padding: 10vh 5vw; */
 }
 
@@ -24,16 +24,6 @@
     width: 100%;
     margin-top: 100px;
     height: 100vh;
-}
-
-.google-login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f9f9f9;
-    padding: 2vh 2vw; 
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 html, body {
