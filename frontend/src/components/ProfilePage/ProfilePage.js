@@ -1,145 +1,154 @@
-// import React, { Component } from "react";
-// import { getRecordsByUser, updateRecord, deleteRecord } from '../../connector';
+import React, { useEffect, useState } from 'react';
+import { getRecordsByUser, deleteRecord } from '../../connector'; // Import the functions to get and delete records
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+import './ProfilePage.css';
+import LinkButton from '../Button/LinkButton/LinkButton';
+import { useNavigate } from 'react-router-dom';
 
-// class ProfilePage extends Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {
-//             records: [],
-//             editRecordId: null, // Store the record being edited
-//             editedRecord: {}, // Store the values of the edited record
-//         };
-//     }
+const ProfilePage = () => {
+    const [records, setRecords] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-//     componentDidMount() {
-//         this.loadUserRecords();
-//     }
+    const navigate = useNavigate();
 
-//     loadUserRecords = async () => {
-//         const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-//         try {
-//             const records = await getRecordsByUser(userInfo._id); // Fetch records for this user
-//             this.setState({ records });
-//         } catch (error) {
-//             console.error("Error loading records:", error);
-//         }
-//     };
+    const handleEdit = (id) => {
+        // Navigate to the edit page, passing the record ID
+        navigate(`/edit/${id}`);
+    };
 
-//     // Handle edit button click
-//     handleEditClick = (record) => {
-//         this.setState({ editRecordId: record._id, editedRecord: { ...record } });
-//     };
+    const handleDelete = async (id) => {
+        // Ask for confirmation before deleting
+        const confirmDelete = window.confirm('Are you sure you want to delete this record?');
+        if (confirmDelete) {
+            try {
+                await deleteRecord(id); // Call the delete function
+                setRecords(records.filter(record => record._id !== id)); // Update the state
+                alert('Record deleted successfully');
+                window.location.reload();
+            } catch (err) {
+                setError(err.message);
+            }
+        }
+    };
 
-//     // Handle input change when editing
-//     handleInputChange = (e) => {
-//         const { name, value } = e.target;
-//         this.setState((prevState) => ({
-//             editedRecord: {
-//                 ...prevState.editedRecord,
-//                 [name]: value
-//             }
-//         }));
-//     };
+    const ActionCellRenderer = (params) => {
+        return (
+            <div className="action-buttons-container">
+            <button className="edit-button" onClick={() => handleEdit(params.data._id)}>
+                Edit
+            </button>
+            <button className="delete-button" onClick={() => handleDelete(params.data._id)}>
+                Delete
+            </button>
+        </div>
+        );
+    };
 
-//     // Save the updated record
-//     handleSaveClick = async () => {
-//         const { editRecordId, editedRecord } = this.state;
-//         try {
-//             await updateRecord(editRecordId, editedRecord);
-//             this.setState({ editRecordId: null });
-//             this.loadUserRecords(); // Reload the records after saving
-//         } catch (error) {
-//             console.error("Error updating record:", error);
-//         }
-//     };
+    const [columnDefs] = useState([
+        { headerName: "Company", field: "company", sortable: true, filter: true, width: 230 },
+        { headerName: "Type", field: "type", sortable: true, filter: true, width: 130 },
+        { 
+            headerName: "Job Title", 
+            field: "jobTitle", 
+            sortable: true, 
+            filter: true, 
+            width: 200,
+            tooltipField: "jobTitle",
+            valueFormatter: (params) => {
+                if (params.value) {
+                    return params.value.replace(/\w\S*/g, (txt) => {
+                        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                    });
+                } else {
+                    return '';
+                }
+            }
+        },
+        { 
+            headerName: "Date", 
+            field: "date", 
+            sortable: true, 
+            filter: true, 
+            width: 120,
+            sort: 'desc',
+            valueFormatter: (params) => {
+                if (!params.value) {
+                    return 'No Date Provided';
+                }
+                
+                const date = new Date(params.value);
+                
+                if (!isNaN(date.getTime())) {
+                    return date.toISOString().split('T')[0]; 
+                } else {
+                    return 'Invalid Date';
+                }
+            }
+        },
+        { headerName: "Interview", field: "receivedInterview", sortable: true, filter: true, width: 120 },
+        { 
+            headerName: "Link", 
+            field: "websiteLink", 
+            width: 95,
+            cellRenderer: LinkButton
+        },
+        { 
+            headerName: "Comment", 
+            field: "comment", 
+            sortable: true, 
+            width: 120,
+            tooltipField: "comment", 
+        },
+        { headerName: "Click", field: "click", sortable: true, width: 100 },
+        {
+            headerName: "Actions",
+            field: "actions",
+            width: 150,
+            cellRenderer: ActionCellRenderer, // Referencing the custom renderer
+        },
+    ]);
 
-//     // Handle delete record
-//     handleDeleteClick = async (recordId) => {
-//         try {
-//             await deleteRecord(recordId);
-//             this.loadUserRecords(); // Reload the records after deletion
-//         } catch (error) {
-//             console.error("Error deleting record:", error);
-//         }
-//     };
+    useEffect(() => {
+        const fetchUserRecords = async () => {
+            const userId = JSON.parse(localStorage.getItem('userInfo'))._id; // Get user ID from localStorage
+            try {
+                const data = await getRecordsByUser(userId);
+                setRecords(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchUserRecords();
+    }, []);
 
-//     render() {
-//         const { records, editRecordId, editedRecord } = this.state;
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>{error}</p>;
 
-//         return (
-//             <div>
-//                 <h2>Your Uploaded Job Records</h2>
-//                 {records.length === 0 ? (
-//                     <p>No records found.</p>
-//                 ) : (
-//                     <table>
-//                         <thead>
-//                             <tr>
-//                                 <th>Company</th>
-//                                 <th>Job Title</th>
-//                                 <th>Date Applied</th>
-//                                 <th>Actions</th>
-//                             </tr>
-//                         </thead>
-//                         <tbody>
-//                             {records.map((record) => (
-//                                 <tr key={record._id}>
-//                                     <td>
-//                                         {editRecordId === record._id ? (
-//                                             <input
-//                                                 type="text"
-//                                                 name="company"
-//                                                 value={editedRecord.company}
-//                                                 onChange={this.handleInputChange}
-//                                             />
-//                                         ) : (
-//                                             record.company
-//                                         )}
-//                                     </td>
-//                                     <td>
-//                                         {editRecordId === record._id ? (
-//                                             <input
-//                                                 type="text"
-//                                                 name="jobTitle"
-//                                                 value={editedRecord.jobTitle}
-//                                                 onChange={this.handleInputChange}
-//                                             />
-//                                         ) : (
-//                                             record.jobTitle
-//                                         )}
-//                                     </td>
-//                                     <td>
-//                                         {editRecordId === record._id ? (
-//                                             <input
-//                                                 type="date"
-//                                                 name="date"
-//                                                 value={editedRecord.date}
-//                                                 onChange={this.handleInputChange}
-//                                             />
-//                                         ) : (
-//                                             new Date(record.date).toLocaleDateString()
-//                                         )}
-//                                     </td>
-//                                     <td>
-//                                         {editRecordId === record._id ? (
-//                                             <button onClick={this.handleSaveClick}>Save</button>
-//                                         ) : (
-//                                             <button onClick={() => this.handleEditClick(record)}>
-//                                                 Edit
-//                                             </button>
-//                                         )}
-//                                         <button onClick={() => this.handleDeleteClick(record._id)}>
-//                                             Delete
-//                                         </button>
-//                                     </td>
-//                                 </tr>
-//                             ))}
-//                         </tbody>
-//                     </table>
-//                 )}
-//             </div>
-//         );
-//     }
-// }
+return (
+    <div className="profile-page">
+        <h1>My Applications</h1>
+        <div className="profile-table-container">
+            <div className="profile-table">
+            <div className="ag-theme-alpine" style={{ height: 500, width: '100%' }}>
+                {records.length === 0 ? (
+                    <div>No records found</div>
+                ) : (
+                    <AgGridReact
+                        rowData={records}
+                        columnDefs={columnDefs}
+                        tooltipShowDelay={0}
+                    />
+                )}
+                </div>
+            </div>
+        </div>
+    </div>
+);
+};
 
-// export default ProfilePage;
+export default ProfilePage;

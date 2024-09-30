@@ -4,7 +4,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './RecordTable.css';
 import { getRecords } from '../../../../connector.js';
-import LinkButton from '../../../Button/LinkButton/LinkButton';
+import LinkButton from '../../../Button/LinkButton/LinkButton.js';
 
 class RecordTable extends Component {
     constructor(props) {
@@ -94,11 +94,7 @@ class RecordTable extends Component {
                         <AgGridReact
                             rowData={this.state.records}
                             columnDefs={this.state.columnDefs}
-                            // defaultColDef={{
-                            //     tooltipComponentParams: { color: '#ececec' }, 
-                            //     tooltipShowDelay: 0,  
-                            //     tooltipHideDelay: 2000, 
-                            // }}
+                            defaultColDef={this.state.defaultColDef}
                             tooltipShowDelay={0} 
                         />
                     )}

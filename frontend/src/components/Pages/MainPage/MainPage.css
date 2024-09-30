@@ -4,12 +4,11 @@
     align-items: center;
     height: 100vh;
     background-color: #ffffff;
-    /* padding: 10vh 5vw; */
 }
 
 .main-page-container {
     width: 90vw;
-    max-width: 1165px;
+    max-width: 1130px;
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);

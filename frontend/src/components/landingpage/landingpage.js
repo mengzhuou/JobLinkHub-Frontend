@@ -31,6 +31,7 @@ const LandingPage = () => {
 
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userInfo', JSON.stringify(response.user));
+            localStorage.setItem('token', response.token); // Store token after login/register
 
             setIsAuthenticated(true);
             setUserInfo(response.user);
@@ -54,11 +55,15 @@ const LandingPage = () => {
         try {
             const response = await registerUser({ username, password, confirmPassword });
             console.log('User registered successfully:', response);
-            setIsAuthenticated(true);
+
+            // After successful registration, automatically log the user in
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userInfo', JSON.stringify(response.user));
+            localStorage.setItem('token', response.token); // Store token after register
+
+            setIsAuthenticated(true);
             setUserInfo(response.user);
-            navigate('/MainPage');
+            navigate('/MainPage'); // Redirect to main page
         } catch (error) {
             if (error.response && error.response.data) {
                 alert(error.response.data.message);
@@ -72,10 +77,14 @@ const LandingPage = () => {
         try {
             const response = await loginUser({ username, password });
             console.log('User logged in successfully:', response);
-            setIsAuthenticated(true);
+            
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userInfo', JSON.stringify(response.user));
+            localStorage.setItem('token', response.token); // Store token after login
+            
+            setIsAuthenticated(true);
             setUserInfo(response.user);
+            
             navigate('/MainPage');
         } catch (error) {
             if (error.response && error.response.data) {
@@ -92,67 +101,67 @@ const LandingPage = () => {
                     <p>Your one-stop solution for job applications and career growth</p>
                     {isAuthenticated && <p>Welcome back, {userInfo.username || userInfo.name}</p>}
                 </div>
-                
-                {/* Conditionally render the auth-container only when user is not authenticated */}
-                {!isAuthenticated && (
-                    <div className="auth-container">
-                        {formType === 'login' ? (
-                            <form onSubmit={handleManualLogin}>
-                                <input
-                                    type="text"
-                                    placeholder="Username"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    required
+                <div className="auth-container">
+                    {!isAuthenticated && (
+                        <>
+                            {formType === 'login' ? (
+                                <form onSubmit={handleManualLogin}>
+                                    <input
+                                        type="text"
+                                        placeholder="Username"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        required
+                                    />
+                                    <input
+                                        type="password"
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                    <button type="submit">Login</button>
+                                    <p onClick={() => setFormType('register')}>Don't have an account? Register here.</p>
+                                </form>
+                            ) : (
+                                <form onSubmit={handleRegister}>
+                                    <input
+                                        type="text"
+                                        placeholder="Username"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        required
+                                    />
+                                    <input
+                                        type="password"
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                    <input
+                                        type="password"
+                                        placeholder="Confirm Password"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        required
+                                    />
+                                    <button type="submit">Register</button>
+                                    <p onClick={() => setFormType('login')}>Already have an account? Login here.</p>
+                                </form>
+                            )}
+                            <div className="divider">
+                                <span>or</span>
+                            </div>
+                            <div className="google-login">
+                                <GoogleLogin
+                                    onSuccess={handleLoginSuccess}
+                                    onError={handleLoginError}
                                 />
-                                <input
-                                    type="password"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
-                                <button type="submit">Login</button>
-                                <p onClick={() => setFormType('register')}>Don't have an account? Register here.</p>
-                            </form>
-                        ) : (
-                            <form onSubmit={handleRegister}>
-                                <input
-                                    type="text"
-                                    placeholder="Username"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    required
-                                />
-                                <input
-                                    type="password"
-                                    placeholder="Password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                />
-                                <input
-                                    type="password"
-                                    placeholder="Confirm Password"
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    required
-                                />
-                                <button type="submit">Register</button>
-                                <p onClick={() => setFormType('login')}>Already have an account? Login here.</p>
-                            </form>
-                        )}
-                        <div className="divider">
-                            <span>or</span>
-                        </div>
-                        <div className="google-login">
-                            <GoogleLogin
-                                onSuccess={handleLoginSuccess}
-                                onError={handleLoginError}
-                            />
-                        </div>
-                    </div>
-                )}
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
         </div>
     );
