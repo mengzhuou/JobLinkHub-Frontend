@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-
+// Verify Google Login
 const verifyGoogleLogin = async (token) => {
     try {
         const res = await axios.post(`${BACKEND_URL}/user/auth/google-login`, { token }, {
@@ -10,115 +10,174 @@ const verifyGoogleLogin = async (token) => {
                 'Content-Type': 'application/json',
             },
         });
+
+        // Store token in localStorage after Google login
+        const { token: jwtToken } = res.data;
+        if (jwtToken) {
+            localStorage.setItem('token', jwtToken);
+        }
+
         return res.data;
     } catch (error) {
-        console.error("Error during Google login:", error);
         throw error;
     }
 };
 
-const getRecords = async () => {
+// Register a new user with username and password
+const registerUser = async ({ username, password, confirmPassword }) => {
     try {
-        const res = await axios.get(`${BACKEND_URL}/records`);
-        return res.data;
-    } catch (error) {
-        console.error("Error fetching records:", error);
-        throw error; 
-    }
-};
-
-const createRecord = async (data) => {
-    const { company, type, jobTitle, date, receivedInterview, websiteLink, comment, click } = data;
-
-    if (!company || typeof company !== 'string') {
-        throw new Error('Company is required and must be a string');
-    }
-
-    if (!type || typeof type !== 'string') {
-        throw new Error('Type is required and must be a string');
-    }
-
-    if (!jobTitle || typeof jobTitle !== 'string') {
-        throw new Error('Job title is required and must be a string');
-    }
-
-    if (!date || isNaN(Date.parse(date))) {
-        throw new Error('Valid date is required');
-    }
-
-    if (receivedInterview == null || typeof receivedInterview !== 'boolean') {
-        throw new Error('Received interview status is required and must be a boolean');
-    }
-
-    if (!websiteLink || typeof websiteLink !== 'string') {
-        throw new Error('Website link is required and must be a string');
-    }
-
-    if (comment && comment.length > 250) {
-        throw new Error('Comment cannot be more than 250 characters');
-    }
-
-    if (click == null || typeof click !== 'number') {
-        throw new Error('Click count is required and must be a number');
-    }
-
-    try {
-        const res = await axios.post(`${BACKEND_URL}/records`, data, {
+        const res = await axios.post(`${BACKEND_URL}/user/auth/register`, {
+            username,
+            password,
+            confirmPassword
+        }, {
             headers: {
                 'Content-Type': 'application/json',
             },
         });
+
+        // Store token in localStorage after registration
+        const { token } = res.data;
+        if (token) {
+            localStorage.setItem('token', token);
+        }
+
         return res.data;
     } catch (error) {
-        console.error("Error creating record:", error);
-        throw error; 
+        throw error;
     }
 };
 
-export const getApplications = async (userId) => {
-    const token = localStorage.getItem('token');
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
+// Login a user with username and password
+const loginUser = async ({ username, password }) => {
+    try {
+        const res = await axios.post(`${BACKEND_URL}/user/auth/login`, {
+            username,
+            password
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        // Store token in localStorage after login
+        const { token } = res.data;
+        if (token) {
+            localStorage.setItem('token', token);
         }
-    };
-    const response = await axios.get(`/applications/${userId}`, config);
-    return response.data;
+
+        return res.data;
+    } catch (error) {
+        console.error("Error during login:", error);
+        throw error;
+    }
 };
 
-export const deleteApplication = async (appId) => {
+// Get all records (protected route)
+const getRecords = async () => {
     const token = localStorage.getItem('token');
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    };
-    await axios.delete(`/applications/${appId}`, config);
+    try {
+        const res = await axios.get(`${BACKEND_URL}/records`, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Attach token
+            },
+        });
+        return res.data;
+    } catch (error) {
+        console.error("Error fetching records:", error);
+        throw error;
+    }
 };
 
-export const updateApplication = async (appId, applicationData) => {
+// Create a new record (protected route)
+const createRecord = async (data) => {
     const token = localStorage.getItem('token');
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    };
-    const response = await axios.put(`/applications/${appId}`, applicationData, config);
-    return response.data;
+    try {
+        const res = await axios.post(`${BACKEND_URL}/records`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`, // Attach token
+            },
+        });
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
 };
 
-export const getApplicationById = async (appId) => {
+// Update an existing record (protected route)
+const updateRecord = async (id, data) => {
     const token = localStorage.getItem('token');
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    };
-    const response = await axios.get(`/applications/${appId}`, config);
-    return response.data;
+    try {
+        const res = await axios.put(`${BACKEND_URL}/records/${id}`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`, // Attach token
+            },
+        });
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const countRecord = async (id,data) => {
+    const token = localStorage.getItem('token');
+    try {
+        const res = await axios.put(`${BACKEND_URL}/records/${id}/click`, data, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`, // Attach token if necessary
+            },
+        });
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+// Logout function
+const logoutUser = () => {
+    localStorage.removeItem('token'); // Remove token from localStorage
+    localStorage.removeItem('userInfo'); // Remove any other user info if needed
+    window.location.reload(); // Reload the page or redirect to login
+};
+
+const getRecordsByUser = async (userId) => {
+    const token = localStorage.getItem('token');
+    try {
+        const res = await axios.get(`${BACKEND_URL}/records/user/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const deleteRecord = async (id) => {
+    const token = localStorage.getItem('token');
+    try {
+        const res = await axios.delete(`${BACKEND_URL}/records/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Attach token if necessary
+            },
+        });
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
 };
 export {
+    verifyGoogleLogin,
+    registerUser,
+    loginUser,
     getRecords,
     createRecord,
-    verifyGoogleLogin,
+    updateRecord,
+    logoutUser,
+    countRecord,
+    getRecordsByUser,
+    deleteRecord, 
 };

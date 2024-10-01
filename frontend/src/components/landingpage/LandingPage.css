@@ -1,0 +1,129 @@
+/* Full-page background */
+.landing-container {
+    background-image: url('../../Image/905d63bd-dd7e-4d55-810b-bc334bca7034.gif');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Overlay to darken the background */
+.overlay {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+}
+
+/* Centered content on top of the background */
+.landing-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.landing-content h1 {
+    font-size: 3rem;
+    margin-bottom: 5px;
+}
+
+.landing-content p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.auth-container {
+    position: absolute;
+    left: 50px; 
+    top: 50%;
+    transform: translateY(-50%); 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 300px;
+    background-color: rgba(255, 255, 255, 0.4);
+    padding: 40px;
+    border-radius: 10px;
+}
+
+.auth-container form {
+    width: 100%;
+}
+
+.auth-container input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+}
+
+.auth-container button {
+    width: 98%;
+    padding: 10px;
+    background-color: rgb(0, 79, 194);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.auth-container button:hover {
+    background-color: rgb(0, 67, 161);
+}
+
+/* Divider between manual login/register and Google login */
+.divider {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+}
+
+.divider::before {
+    margin-right: 10px;
+}
+
+.divider::after {
+    margin-left: 10px;
+}
+
+.divider span {
+    color: #000000;
+    font-size: 0.9rem;
+}
+
+/* Google login button */
+.google-login {
+    margin-top: 20px;
+    width: 100%;
+    display: flex; 
+    justify-content: center;
+}
+.auth-container p {
+    cursor: pointer;
+}
+
+

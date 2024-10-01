@@ -50,8 +50,12 @@ class TopNavBar extends Component {
         this.props.navigate("/profile");
         this.toggleDropdown();
     };
+    mainpageNav = () => {
+        this.props.navigate("/MainPage");
+        this.toggleDropdown();
+    };
     navigateHome = () => {
-        this.props.navigate("/");  
+        this.props.navigate("/MainPage");  
     }
 
     render() {
@@ -73,7 +77,8 @@ class TopNavBar extends Component {
                                 <div className="dropdown-content" onClick={this.profileNav}>Profile</div>
                                 <div className="dropdown-content" onClick={this.logoutNav}>Logout</div>
                                 <div className="dropdown-content" onClick={this.applicationNav}>Application</div>
-                                <div className="dropdown-content">Notification</div>
+                                <div className="dropdown-content" onClick={this.mainpageNav}>MainPage</div>
+                                {/* <div className="dropdown-content">Notification</div> */}
                             </div>                        
                         )}
 

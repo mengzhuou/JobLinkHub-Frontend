@@ -19,3 +19,12 @@
 .ag-root-wrapper.ag-layout-normal {
     height: 88vh !important;
 }
+
+.ag-tooltip {
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    max-width: 250px;
+    white-space: pre-wrap;
+}
