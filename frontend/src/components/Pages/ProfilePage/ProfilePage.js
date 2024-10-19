@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { getRecordsByUser, deleteRecord } from '../../connector'; // Import the functions to get and delete records
+import { getRecordsByUser, deleteRecord } from '../../../connector'; // Import the functions to get and delete records
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './ProfilePage.css';
-import LinkButton from '../Button/LinkButton/LinkButton';
+import LinkButton from '../../Button/LinkButton/LinkButton';
 import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
@@ -102,7 +102,7 @@ const ProfilePage = () => {
             width: 120,
             tooltipField: "comment", 
         },
-        { headerName: "Click", field: "click", sortable: true, width: 100 },
+        { headerName: "Click", field: "click", sortable: true, width: 90 },
         {
             headerName: "Actions",
             field: "actions",

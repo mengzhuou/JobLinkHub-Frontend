@@ -16,3 +16,68 @@
 .apply-button:hover {
     background-color: #0056b3;
 }
+
+.apply-button.applied {
+    background-color: #808080; /* Gray color for Applied */
+    /* cursor: not-allowed; */
+}
+
+.apply-button.applied:hover {
+    background-color: #808080; /* Keep gray on hover */
+}
+
+/* Modal Overlay for Confirm Dialog */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; 
+}
+
+/* Modal Content Box */
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    max-width: 300px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 10000; /* Ensure modal content is on top */
+}
+
+/* Yes and No Button Styles */
+.yes-button, .no-button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    width: 80px;
+}
+
+.yes-button {
+    background-color: #4CAF50; 
+    color: white;
+}
+
+.yes-button:hover {
+    background-color: #45a049;
+}
+
+.no-button {
+    background-color: #f44336; 
+    color: white;
+}
+
+.no-button:hover {
+    background-color: #d32f2f;
+}

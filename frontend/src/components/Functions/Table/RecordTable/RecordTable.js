@@ -11,6 +11,7 @@ class RecordTable extends Component {
         super(props);
         this.state = {
             records: [],
+            filterOption: 'all',
             columnDefs: [
                 { headerName: "Company", field: "company", sortable: true, filter: true, width: 230 },
                 { headerName: "Type", field: "type", sortable: true, filter: true, width: 130 },
@@ -63,10 +64,10 @@ class RecordTable extends Component {
                     headerName: "Comment", 
                     field: "comment", 
                     sortable: true, 
-                    width: 120,
+                    width: 100,
                     tooltipField: "comment", 
                 },
-                { headerName: "Click", field: "click", sortable: true, width: 100 },
+                { headerName: "Click", field: "click", sortable: true, width: 90 },
             ]
         };
     }
@@ -78,24 +79,55 @@ class RecordTable extends Component {
     loadRecords = async () => {
         try {
             const records = await getRecords();
-            this.setState({ records });
+            const updatedRecords = records.map(record => {
+                const appliedStatus = localStorage.getItem(`appliedStatus-${record._id}`);
+                return {
+                    ...record,
+                    applied: appliedStatus === 'true'
+                };
+            });
+            this.setState({ records: updatedRecords });
         } catch (error) {
             console.error("Error loading records:", error);
         }
     };
 
+    getFilteredRecords = () => {
+        const { records, filterOption } = this.state;
+        if (filterOption === 'applied') {
+            return records.filter(record => record.applied);
+        } else if (filterOption === 'notApplied') {
+            return records.filter(record => !record.applied);
+        } else {
+            return records;
+        }
+    };
+
+    handleFilterChange = (event) => {
+        this.setState({ filterOption: event.target.value });
+    };
+
     render() {
+        const filteredRecords = this.getFilteredRecords();
+
         return (
             <div className="body">
+                <div className="filter-container">
+                    <label>Filter: </label>
+                    <select onChange={this.handleFilterChange} value={this.state.filterOption}>
+                        <option value="all">All</option>
+                        <option value="applied">Applied</option>
+                        <option value="notApplied">Not Applied</option>
+                    </select>
+                </div>
+
                 <div className="RecordPageContainer ag-theme-alpine" style={{ height: 500, width: '100%' }}>
-                    {this.state.records.length === 0 ? (
+                    {filteredRecords.length === 0 ? (
                         <div>No records found</div>
                     ) : (
                         <AgGridReact
-                            rowData={this.state.records}
+                            rowData={filteredRecords}
                             columnDefs={this.state.columnDefs}
-                            defaultColDef={this.state.defaultColDef}
-                            tooltipShowDelay={0} 
                         />
                     )}
                 </div>
