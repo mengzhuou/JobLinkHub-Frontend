@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // Import useParams and useNavigate
-import { updateRecord, getRecordsByUser } from '../../connector'; // Import necessary functions
+import { useParams, useNavigate } from 'react-router-dom';
+import { updateRecord, getRecordsByUser } from '../../../connector';
 
 const EditRecordForm = () => {
-    const { id } = useParams(); // Use useParams to get the record ID from the URL
-    const navigate = useNavigate(); // Use useNavigate to redirect
+    const { id } = useParams();
+    const navigate = useNavigate();
     const [record, setRecord] = useState({
         company: '',
         positionType: '',
@@ -16,12 +16,16 @@ const EditRecordForm = () => {
     });
     const [commentLength, setCommentLength] = useState(0);
     const [commentError, setCommentError] = useState('');
+    const [maxDate, setMaxDate] = useState('');
 
     useEffect(() => {
-        // Fetch the record data by ID when the component mounts
+        // Calculate today's date in YYYY-MM-DD format
+        const today = new Date().toISOString().split('T')[0];
+        setMaxDate(today);
+
         const fetchRecord = async () => {
             try {
-                const recordData = await getRecordsByUser(id); // Get the record by ID
+                const recordData = await getRecordsByUser(id);
                 setRecord(recordData);
                 setCommentLength(recordData.comment.length);
             } catch (error) {
@@ -63,7 +67,6 @@ const EditRecordForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Update the record
             await updateRecord(id, {
                 company: record.company,
                 type: record.positionType,
@@ -134,6 +137,7 @@ const EditRecordForm = () => {
                     name="dateApplied" 
                     value={record.dateApplied} 
                     onChange={handleChange} 
+                    max={maxDate} // Set the max attribute here
                 />
                 <label>Application Link<span>*</span></label>
                 <input 

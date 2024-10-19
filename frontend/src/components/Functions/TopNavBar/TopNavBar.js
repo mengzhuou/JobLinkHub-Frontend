@@ -11,77 +11,111 @@ class TopNavBar extends Component {
         super(props);
         this.state = {
             isDroppedDown: false,
+            isAuthenticated: localStorage.getItem('isAuthenticated') === 'true',
         };
+        this.dropdownRef = React.createRef(); // Create a ref for the dropdown
+    }
+
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
+    handleClickOutside = (event) => {
+        // Check if click was outside the dropdown
+        if (this.dropdownRef.current && !this.dropdownRef.current.contains(event.target)) {
+            this.setState({ isDroppedDown: false });
+        }
     }
 
     toggleDropdown = () => {
-        const { isDroppedDown } = this.state;
-        this.setState({isDroppedDown: !isDroppedDown})
+        this.setState((prevState) => ({ isDroppedDown: !prevState.isDroppedDown }));
     }
-    
-    // profileNav = () => {
-    //     this.props.navigate("/Profile");
-    // }
 
-    // notificationeNav = () => {
-    //     this.props.navigate("/Notification");
-    // }
+    batchUploadNav = () => {
+        this.props.navigate("/batch-upload");
+        this.toggleDropdown();
+    };
 
     applicationNav = () => {
         this.props.navigate("/Application");
-        this.toggleDropdown(); 
-    }
+        this.toggleDropdown();
+    };
 
-    logoutNav = () => {    
+    logoutNav = () => {
         localStorage.removeItem('isAuthenticated');
         localStorage.removeItem('userInfo');
-        localStorage.removeItem('token'); 
+        localStorage.removeItem('token');
         console.log("Authentication info removed from localStorage");
-    
+
         googleLogout();
         console.log("Logged out from Google");
-    
+
         this.props.navigate("/");
-        console.log("Navigated to home");    
+        console.log("Navigated to home");
         window.location.reload();
-        this.setState({ isDroppedDown: false });
-    }   
+        this.setState({ isDroppedDown: false, isAuthenticated: false });
+    };
+
     profileNav = () => {
         this.props.navigate("/profile");
         this.toggleDropdown();
     };
+
     mainpageNav = () => {
         this.props.navigate("/MainPage");
         this.toggleDropdown();
     };
+
+    loginNav = () => {
+        this.props.navigate("/");
+        this.toggleDropdown();
+    };
+
     navigateHome = () => {
-        this.props.navigate("/MainPage");  
-    }
+        const { isAuthenticated } = this.state;
+        
+        if (isAuthenticated) {
+            this.props.navigate("/MainPage");
+        } else {
+            alert("You need to log in first to access Job Link Hub.");
+            this.props.navigate("/");
+        }
+    };
 
     render() {
-        const { isDroppedDown } = this.state;
+        const { isDroppedDown, isAuthenticated } = this.state;
         return (
             <div className="navBar">
                 <div className="navBar-left">
-                <div className="navTitle" onClick={this.navigateHome}>
-                Job Link Hub</div>
+                    <div className="navTitle" onClick={this.navigateHome}>
+                        Job Link Hub
+                    </div>
                 </div>
                 <div className="navBar-right">
                     <div className="userIcon" onClick={this.toggleDropdown}>
                         <FontAwesomeIcon icon={faCircleUser} />
                     </div>
-                    <div className="dropdownIcon">
-                        <FontAwesomeIcon icon={isDroppedDown? faAngleUp: faAngleDown} onClick={this.toggleDropdown}/>
+                    <div className="dropdownIcon" ref={this.dropdownRef}>
+                        <FontAwesomeIcon icon={isDroppedDown ? faAngleUp : faAngleDown} onClick={this.toggleDropdown} />
                         {isDroppedDown && (
                             <div className="dropdown-container">
-                                <div className="dropdown-content" onClick={this.profileNav}>Profile</div>
-                                <div className="dropdown-content" onClick={this.logoutNav}>Logout</div>
-                                <div className="dropdown-content" onClick={this.applicationNav}>Application</div>
-                                <div className="dropdown-content" onClick={this.mainpageNav}>MainPage</div>
-                                {/* <div className="dropdown-content">Notification</div> */}
-                            </div>                        
+                                {isAuthenticated ? (
+                                    <>
+                                        <div className="dropdown-content" onClick={this.profileNav}>Profile</div>
+                                        <div className="dropdown-content" onClick={this.applicationNav}>Application</div>
+                                        <div className="dropdown-content" onClick={this.mainpageNav}>MainPage</div>
+                                        <div className="dropdown-content" onClick={this.batchUploadNav}>Batch Upload</div>
+                                        <div className="dropdown-content" onClick={this.logoutNav}>Logout</div>
+                                    </>
+                                ) : (
+                                    <div className="dropdown-content" onClick={this.loginNav}>Log In</div>
+                                )}
+                            </div>
                         )}
-
                     </div>
                 </div>
             </div>

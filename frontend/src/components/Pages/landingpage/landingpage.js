@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from 'react-router-dom';
 import './LandingPage.css';
-import { verifyGoogleLogin, registerUser, loginUser } from '../../connector'; // Add register and login methods
+import { verifyGoogleLogin, registerUser, loginUser } from '../../../connector';
 
 const LandingPage = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userInfo, setUserInfo] = useState(null);
-    const [formType, setFormType] = useState('login'); // Switch between login and register forms
+    const [formType, setFormType] = useState('login');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -31,11 +31,12 @@ const LandingPage = () => {
 
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userInfo', JSON.stringify(response.user));
-            localStorage.setItem('token', response.token); // Store token after login/register
+            localStorage.setItem('token', response.token);
 
             setIsAuthenticated(true);
             setUserInfo(response.user);
             navigate('/MainPage');
+            window.location.reload();
         } catch (error) {
             console.error('Google login failed:', error);
         }
@@ -45,7 +46,6 @@ const LandingPage = () => {
         console.error('Google login failed');
     };
 
-    // Handle manual registration
     const handleRegister = async (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
@@ -56,14 +56,13 @@ const LandingPage = () => {
             const response = await registerUser({ username, password, confirmPassword });
             console.log('User registered successfully:', response);
 
-            // After successful registration, automatically log the user in
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userInfo', JSON.stringify(response.user));
-            localStorage.setItem('token', response.token); // Store token after register
+            localStorage.setItem('token', response.token);
 
             setIsAuthenticated(true);
             setUserInfo(response.user);
-            navigate('/MainPage'); // Redirect to main page
+            navigate('/MainPage');
         } catch (error) {
             if (error.response && error.response.data) {
                 alert(error.response.data.message);
@@ -71,7 +70,6 @@ const LandingPage = () => {
         }
     };
 
-    // Handle manual login
     const handleManualLogin = async (e) => {
         e.preventDefault();
         try {
@@ -80,11 +78,10 @@ const LandingPage = () => {
             
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userInfo', JSON.stringify(response.user));
-            localStorage.setItem('token', response.token); // Store token after login
+            localStorage.setItem('token', response.token);
             
             setIsAuthenticated(true);
             setUserInfo(response.user);
-            
             navigate('/MainPage');
         } catch (error) {
             if (error.response && error.response.data) {
@@ -121,7 +118,7 @@ const LandingPage = () => {
                                         required
                                     />
                                     <button type="submit">Login</button>
-                                    <p onClick={() => setFormType('register')}>Don't have an account? Register here.</p>
+                                    <p>Don't have an account? <span onClick={() => setFormType('register')}>Register here.</span></p>
                                 </form>
                             ) : (
                                 <form onSubmit={handleRegister}>
@@ -147,7 +144,7 @@ const LandingPage = () => {
                                         required
                                     />
                                     <button type="submit">Register</button>
-                                    <p onClick={() => setFormType('login')}>Already have an account? Login here.</p>
+                                    <p>Already have an account? <span onClick={() => setFormType('login')}>Login here.</span></p>
                                 </form>
                             )}
                             <div className="divider">

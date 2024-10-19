@@ -169,6 +169,48 @@ const deleteRecord = async (id) => {
         throw error;
     }
 };
+
+const getApplicationStatus = async (id) => {
+    const token = localStorage.getItem('token');
+    try {
+        const res = await axios.get(`${BACKEND_URL}/records/${id}/status`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return res.data; 
+    } catch (error) {
+        if (error.response && error.response.status === 404) {
+            console.error("Record not found:", error);
+        } else {
+            console.error("Error fetching application status:", error);
+        }
+        throw error;
+    }
+};
+
+const updateApplicationStatus = async (id, status) => {
+    const token = localStorage.getItem('token');
+    try {
+        const res = await axios.patch(`${BACKEND_URL}/records/${id}/status`, { status }, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return res.data;
+    } catch (error) {
+        if (error.response && error.response.status === 404) {
+            console.error("Record not found:", error);
+        } else {
+            console.error("Error updating application status:", error);
+        }
+        throw error;
+    }
+};
+
+
+
 export {
     verifyGoogleLogin,
     registerUser,
@@ -179,5 +221,7 @@ export {
     logoutUser,
     countRecord,
     getRecordsByUser,
-    deleteRecord, 
+    deleteRecord,
+    updateApplicationStatus,
+    getApplicationStatus   
 };

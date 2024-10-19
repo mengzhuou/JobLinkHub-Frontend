@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Main from "./components/Pages/MainPage/MainPage";
 import TopNavBar from "./components/Functions/TopNavBar/TopNavBar";
 import Application from "./components/Pages/Application/Application" 
-import Profile from "./components/ProfilePage/ProfilePage";
-import LandingPage from "./components/landingpage/landingpage";
-import EditRecordForm from './components/EditRecordPage/EditRecordPage';
+import Profile from "./components/Pages/ProfilePage/ProfilePage";
+import LandingPage from "./components/Pages/landingpage/landingpage";
+import EditRecordForm from './components/Pages/EditRecordPage/EditRecordPage';
+import BatchUpload from './components/Pages/BatchUpload/BatchUpload';
+
 class App extends Component {
 
   render() {
@@ -19,6 +21,7 @@ class App extends Component {
           <Route path="/edit/:id" element={<EditRecordForm />}/>
           <Route path="/MainPage" element={<Main/>} />
           <Route path="/" element={<LandingPage/>}/>
+          <Route path="/batch-upload" element={<BatchUpload/>} />
         </Routes>
       </Router>
     );

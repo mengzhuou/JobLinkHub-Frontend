@@ -28,3 +28,33 @@
     max-width: 250px;
     white-space: pre-wrap;
 }
+/* Apply a linear gradient to the header row */
+.ag-header {
+    background-image: linear-gradient(to right, rgb(69, 79, 51), rgb(182, 147, 130));
+    color: white;
+}
+
+.ag-header-cell {
+    color: white;
+    font-weight: bold;
+    border: none; /* Optional: remove default borders for a smoother look */
+}
+
+/* Optional: Ensure text is centered in each header cell */
+.ag-header-cell-label {
+    justify-content: center;
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.filter-container label {
+    margin-right: 5px;
+}
+.filter-container select {
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 5px;
+}

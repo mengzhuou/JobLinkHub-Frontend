@@ -1,3 +1,7 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
 .application-form-container {
     display: flex;
     justify-content: center;
@@ -6,7 +10,6 @@
     background-color: #f9f9f9; 
     padding: 20px;
     box-sizing: border-box;
-    gap:50px;
 }
 
 .application-form {
@@ -19,7 +22,7 @@
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
-    margin-bottom: 30px; 
+    margin: 0 auto; /* Center the form horizontally */
 }
 
 .application-form h2 {
@@ -91,50 +94,9 @@ label span {
     color: red; /* Red asterisk for required fields */
 }
 
-/* Styling for the batch upload section */
-.batch-upload-container {
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-.batch-upload-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 1.5rem;
-    color: #333;
-}
-
-.batch-upload-container input[type="file"] {
-    margin-bottom: 15px;
-}
-
-.batch-submit-button {
-    background-color: #f39c12; /* Orange button */
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    width: 100%;
-    transition: background-color 0.3s ease;
-}
-
-.batch-submit-button:hover {
-    background-color: #e67e22; /* Darker orange on hover */
-}
-
 /* Mobile adjustments */
 @media (max-width: 768px) {
-    .application-form, .batch-upload-container {
+    .application-form {
         width: 90%;
     }
 
@@ -142,7 +104,7 @@ label span {
         flex-direction: column;
     }
 
-    .submit-button, .batch-submit-button {
+    .submit-button {
         font-size: 0.9rem;
     }
 }
