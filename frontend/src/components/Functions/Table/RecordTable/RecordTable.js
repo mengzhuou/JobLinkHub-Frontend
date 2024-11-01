@@ -128,6 +128,8 @@ class RecordTable extends Component {
                         <AgGridReact
                             rowData={filteredRecords}
                             columnDefs={this.state.columnDefs}
+                            pagination={true}                // Enable pagination
+                            paginationPageSize={14}          // Set page size to 12
                         />
                     )}
                 </div>
@@ -137,3 +139,7 @@ class RecordTable extends Component {
 }
 
 export default RecordTable;
+<div data-ref="eWrapper" class="ag-wrapper ag-picker-field-wrapper ag-picker-expanded ag-has-popup-positioned-under" tabindex="0" aria-expanded="true" role="combobox" aria-controls="ag-select-list-102" aria-label="Page Size">
+                    <div data-ref="eDisplayField" class="ag-picker-field-display" id="ag-101-display"></div>
+                    <div data-ref="eIcon" class="ag-picker-field-icon" aria-hidden="true"><span class="ag-icon ag-icon-small-down" unselectable="on" role="presentation"></span></div>
+                </div>

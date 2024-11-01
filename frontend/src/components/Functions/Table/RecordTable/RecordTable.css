@@ -17,7 +17,7 @@
     overflow-y: scroll; /* Ensure content is still scrollable */
 }
 .ag-root-wrapper.ag-layout-normal {
-    height: 88vh !important;
+    height: 75vh !important;
 }
 
 .ag-tooltip {
@@ -57,4 +57,7 @@
     padding: 5px;
     font-size: 16px;
     border-radius: 5px;
+}
+.ag-paging-row-summary-panel, .ag-label, .ag-wrapper, .ag-picker-field-wrapper{
+    display:none;
 }

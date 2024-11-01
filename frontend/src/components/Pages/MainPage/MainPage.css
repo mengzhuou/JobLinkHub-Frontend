@@ -16,7 +16,7 @@
     justify-content: center;
     align-items: center;
     padding: 20px;
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 .record-table-section {
@@ -26,14 +26,14 @@
 }
 
 html, body {
-    /* overflow: hidden;  */
+    overflow: hidden; 
     padding: 0;
     margin: 0;
     height: 100%;
 }
 
 .record-table-section h3 {
-    margin-top: 0px;
+    margin-top: 30px;
 }
 
 @media screen and (max-width: 768px) {
