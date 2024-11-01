@@ -24,6 +24,12 @@ class BatchUpload extends Component {
             const sheetName = workbook.SheetNames[0];
             const sheet = workbook.Sheets[sheetName];
             const jsonData = XLSX.utils.sheet_to_json(sheet);
+
+            if (jsonData.length === 0) {
+                alert('Error: The uploaded file is empty.');
+                return;
+            }
+
             this.setState({ batchRecords: jsonData });
         };
         reader.readAsArrayBuffer(file);
@@ -31,6 +37,11 @@ class BatchUpload extends Component {
 
     handleBatchSubmit = async () => {
         const { batchRecords } = this.state;
+
+        if (batchRecords.length === 0) {
+            alert("Error: No records to upload. Please check your file.");
+            return;
+        }
 
         const isValidURL = (url) => {
             try {
@@ -65,7 +76,7 @@ class BatchUpload extends Component {
                 jobTitle: record['Job Title'] || 'Unknown Job Title',
                 date: validDate,
                 receivedInterview: receivedInterview || false,
-                websiteLink: applicationLink, 
+                websiteLink: applicationLink,
                 comment: record.comment || '',
                 click: 1
             };
