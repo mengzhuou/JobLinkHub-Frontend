@@ -116,6 +116,7 @@ const ProfilePage = () => {
             const userId = JSON.parse(localStorage.getItem('userInfo'))._id; // Get user ID from localStorage
             try {
                 const data = await getRecordsByUser(userId);
+                console.log("userId: ", userId)
                 setRecords(data);
             } catch (err) {
                 setError(err.message);
