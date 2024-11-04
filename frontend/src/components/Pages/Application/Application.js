@@ -19,9 +19,13 @@ class ApplicationForm extends Component {
     }
 
     componentDidMount() {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById("date-applied").setAttribute("max", today);
+        const today = new Date();
+        const localDate = today.getFullYear() + '-' + 
+                          String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                          String(today.getDate()).padStart(2, '0');
+        document.getElementById("date-applied").setAttribute("max", localDate);
     }
+    
 
     handleChange = (e) => {
         const { name, value } = e.target;

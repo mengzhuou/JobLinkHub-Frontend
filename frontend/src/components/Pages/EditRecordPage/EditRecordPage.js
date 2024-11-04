@@ -84,6 +84,7 @@ const EditRecordForm = () => {
         }
     };
 
+
     return (
         <div className="application-form-container">
             <form className="application-form" onSubmit={handleSubmit}>
