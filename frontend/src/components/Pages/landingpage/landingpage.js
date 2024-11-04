@@ -83,6 +83,7 @@ const LandingPage = () => {
             setIsAuthenticated(true);
             setUserInfo(response.user);
             navigate('/MainPage');
+            window.location.reload();
         } catch (error) {
             if (error.response && error.response.data) {
                 alert(error.response.data.message);
