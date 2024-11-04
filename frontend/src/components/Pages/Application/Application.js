@@ -55,6 +55,7 @@ class ApplicationForm extends Component {
     };
 
     handleCreateRecord = async () => {
+        const userId = JSON.parse(localStorage.getItem('userInfo'))._id;
         const { company, positionType, receivedInterview, jobTitle, dateApplied, applicationLink, comment } = this.state;
         const recordData = {
             company,
@@ -64,7 +65,8 @@ class ApplicationForm extends Component {
             receivedInterview: receivedInterview === 'YES',
             websiteLink: applicationLink,
             comment: comment || '',
-            click: 1
+            click: 1,
+            appliedBy: [userId]
         };
 
         try {
