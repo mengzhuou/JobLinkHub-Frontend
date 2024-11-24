@@ -84,22 +84,47 @@ class RecordTable extends Component {
     componentDidMount() {
         this.loadRecords();
     }
-
     loadRecords = async () => {
-        try {
-            const records = await getRecords();
-            const updatedRecords = records.map(record => {
-                const appliedStatus = localStorage.getItem(`appliedStatus-${record._id}`);
-                return {
-                    ...record,
-                    applied: appliedStatus === 'true'
-                };
-            });
-            this.setState({ records: updatedRecords });
-        } catch (error) {
-            console.error("Error loading records:", error);
+        let attempts = 0; 
+        const maxAttempts = 10; 
+        const delay = 3000;
+    
+        const fetchRecords = async () => {
+            try {
+                const records = await getRecords();
+                if (records.length > 0) {
+                    // Successfully loaded records at first attemp
+                    const updatedRecords = records.map(record => {
+                        const appliedStatus = localStorage.getItem(`appliedStatus-${record._id}`);
+                        return {
+                            ...record,
+                            applied: appliedStatus === 'true'
+                        };
+                    });
+                    this.setState({ records: updatedRecords });
+                    return true; 
+                }
+                throw new Error("No records found");
+            } catch (error) {
+                console.error(`Attempt ${attempts + 1}: Error loading records:`, error);
+                return false;
+            }
+        };
+    
+        while (attempts < maxAttempts) {
+            const success = await fetchRecords();
+            if (success) break; // Exit loop if data is successfully loaded
+            attempts++;
+            if (attempts < maxAttempts) {
+                await new Promise(resolve => setTimeout(resolve, delay)); // Wait before next attempt
+            }
+        }
+    
+        if (attempts === maxAttempts) {
+            console.error("Max attempts reached. Failed to load records.");
         }
     };
+    
 
     getFilteredRecords = () => {
         const { records, filterOption } = this.state;
