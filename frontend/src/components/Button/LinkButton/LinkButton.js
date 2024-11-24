@@ -26,35 +26,36 @@ const LinkButton = (props) => {
         };
         fetchStatus();
     }, [props.data._id]);
-
-    const handleClick = async () => {
+   
+    const handleClick = () => {
+        window.open(props.value, '_blank');
+        setShowModal(true);
+    };
+    
+    const handleYes = async () => {
+        setButtonText("Applied");
+        localStorage.setItem(`appliedStatus-${props.data._id}`, 'true');
+        await updateApplicationStatus(props.data._id, true);
         try {
-            await countRecord(props.data._id, { click: props.data.click + 1 });
-            window.open(props.value, '_blank');
-            setShowModal(true);
+            await countRecord(props.data._id, { click: props.data.click + 1 }); // Increment click count only if "Yes"
         } catch (error) {
             console.error("Error updating click count:", error);
         }
-    };
-
-    const handleYes = async () => {
-        setButtonText("Applied");
-        localStorage.setItem(`appliedStatus-${props.data._id}`, 'true'); 
-        await updateApplicationStatus(props.data._id, true); 
         setShowModal(false);
         if (props.refreshTable) {
             props.refreshTable();
         }
-        window.location.reload(); 
+        window.location.reload();
     };
     
     const handleNo = async () => {
         setButtonText("Apply");
-        localStorage.setItem(`appliedStatus-${props.data._id}`, 'false'); 
+        localStorage.setItem(`appliedStatus-${props.data._id}`, 'false');
         await updateApplicationStatus(props.data._id, false);
         setShowModal(false);
-        window.location.reload(); 
+        window.location.reload();
     };
+    
 
     return (
         <div>

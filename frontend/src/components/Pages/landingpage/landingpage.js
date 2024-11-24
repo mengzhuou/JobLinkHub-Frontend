@@ -97,7 +97,9 @@ const LandingPage = () => {
                 <div className="landing-content">
                     <h1>Welcome to JobLinkHub</h1>
                     <p>Your one-stop solution for job applications and career growth</p>
-                    {isAuthenticated && <p>Welcome back, {userInfo.username || userInfo.name}</p>}
+                    {isAuthenticated && 
+                        <p>Welcome back, {userInfo.username || userInfo.name}</p>
+                    }
                 </div>
                 {!isAuthenticated && (
                     <div className="auth-container">

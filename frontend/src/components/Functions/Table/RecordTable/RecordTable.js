@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AgGridReact } from 'ag-grid-react';
+import AgGridTable from '../AgGridTable/AgGridTable';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './RecordTable.css';
@@ -13,14 +13,26 @@ class RecordTable extends Component {
             records: [],
             filterOption: 'all',
             columnDefs: [
-                { headerName: "Company", field: "company", sortable: true, filter: true, width: 230 },
-                { headerName: "Type", field: "type", sortable: true, filter: true, width: 130 },
+                { 
+                    headerName: "Company", 
+                    field: "company", 
+                    sortable: true, 
+                    filter: true, 
+                    flex: 1.7 
+                },
+                { 
+                    headerName: "Type", 
+                    field: "type", 
+                    sortable: true, 
+                    filter: true, 
+                    flex: 1.2
+                },
                 { 
                     headerName: "Job Title", 
                     field: "jobTitle", 
                     sortable: true, 
                     filter: true, 
-                    width: 200,
+                    flex: 3,
                     tooltipField: "jobTitle",
                     valueFormatter: (params) => {
                         if (params.value) {
@@ -37,7 +49,7 @@ class RecordTable extends Component {
                     field: "date", 
                     sortable: true, 
                     filter: true, 
-                    width: 120,
+                    flex: 1.5,
                     sort: 'desc',
                     valueFormatter: (params) => {
                         if (!params.value) {
@@ -53,21 +65,18 @@ class RecordTable extends Component {
                         }
                     }
                 },
-                { headerName: "Interview", field: "receivedInterview", sortable: true, filter: true, width: 120 },
+                { 
+                    headerName: "Interviewed", 
+                    field: "receivedInterview", 
+                    sortable: true, 
+                    flex: 2 
+                },
                 { 
                     headerName: "Link", 
                     field: "websiteLink", 
-                    width: 95,
+                    flex: 1,
                     cellRenderer: LinkButton
-                },
-                { 
-                    headerName: "Comment", 
-                    field: "comment", 
-                    sortable: true, 
-                    width: 100,
-                    tooltipField: "comment", 
-                },
-                { headerName: "Click", field: "click", sortable: true, width: 90 },
+                }
             ]
         };
     }
@@ -125,11 +134,11 @@ class RecordTable extends Component {
                     {filteredRecords.length === 0 ? (
                         <div>No records found</div>
                     ) : (
-                        <AgGridReact
+                        <AgGridTable
                             rowData={filteredRecords}
                             columnDefs={this.state.columnDefs}
-                            pagination={true}                // Enable pagination
-                            paginationPageSize={14}          // Set page size to 12
+                            defaultColDef={{ sortable: true, resizable: true }}
+                            domLayout="autoHeight"
                         />
                     )}
                 </div>

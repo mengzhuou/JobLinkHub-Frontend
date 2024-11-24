@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getRecordsByUser, deleteRecord } from '../../../connector'; // Import the functions to get and delete records
-import { AgGridReact } from 'ag-grid-react';
+import AgGridTable from '../../Functions/Table/AgGridTable/AgGridTable';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './ProfilePage.css';
@@ -139,10 +139,11 @@ return (
                 {records.length === 0 ? (
                     <div>No records found</div>
                 ) : (
-                    <AgGridReact
+                    <AgGridTable
                         rowData={records}
                         columnDefs={columnDefs}
-                        tooltipShowDelay={0}
+                        defaultColDef={{ sortable: true, resizable: true }}
+                        domLayout="autoHeight"
                     />
                 )}
                 </div>
