@@ -60,12 +60,9 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 .profile-table {
     width: 100vw;
-    max-width: 1260px;      
     margin: 0 auto;         
-    border: 1px solid #ccc; 
     border-radius: 8px;     
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); 
-    height: 88vh;
+    height: 80vh;
 }
 
 .profile-page {

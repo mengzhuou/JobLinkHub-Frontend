@@ -48,14 +48,14 @@ const ProfilePage = () => {
     };
 
     const [columnDefs] = useState([
-        { headerName: "Company", field: "company", sortable: true, filter: true, width: 230 },
-        { headerName: "Type", field: "type", sortable: true, filter: true, width: 130 },
+        { headerName: "Company", field: "company", sortable: true, filter: true, flex: 1.4 },
+        { headerName: "Type", field: "type", sortable: true, filter: true, flex: 1 },
         { 
             headerName: "Job Title", 
             field: "jobTitle", 
             sortable: true, 
             filter: true, 
-            width: 200,
+            flex: 2,
             tooltipField: "jobTitle",
             valueFormatter: (params) => {
                 if (params.value) {
@@ -72,7 +72,7 @@ const ProfilePage = () => {
             field: "date", 
             sortable: true, 
             filter: true, 
-            width: 120,
+            flex: 1.3,
             sort: 'desc',
             valueFormatter: (params) => {
                 if (!params.value) {
@@ -88,25 +88,24 @@ const ProfilePage = () => {
                 }
             }
         },
-        { headerName: "Interview", field: "receivedInterview", sortable: true, filter: true, width: 120 },
+        { headerName: "Interviewed", field: "receivedInterview", sortable: true, filter: true, flex: 1.6 },
         { 
             headerName: "Link", 
             field: "websiteLink", 
-            width: 95,
+            flex: 1,
             cellRenderer: LinkButton
         },
         { 
             headerName: "Comment", 
             field: "comment", 
             sortable: true, 
-            width: 120,
+            flex: 1.5,
             tooltipField: "comment", 
         },
-        { headerName: "Click", field: "click", sortable: true, width: 90 },
         {
             headerName: "Actions",
             field: "actions",
-            width: 150,
+            flex: 1,
             cellRenderer: ActionCellRenderer, // Referencing the custom renderer
         },
     ]);
