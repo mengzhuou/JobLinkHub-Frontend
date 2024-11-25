@@ -49,13 +49,10 @@ class TopNavBar extends Component {
         localStorage.removeItem('isAuthenticated');
         localStorage.removeItem('userInfo');
         localStorage.removeItem('token');
-        console.log("Authentication info removed from localStorage");
 
         googleLogout();
-        console.log("Logged out from Google");
 
         this.props.navigate("/");
-        console.log("Navigated to home");
         window.location.reload();
         this.setState({ isDroppedDown: false, isAuthenticated: false });
     };

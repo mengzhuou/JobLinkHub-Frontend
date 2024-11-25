@@ -56,7 +56,7 @@ const LinkButton = (props) => {
             <button 
                 onClick={handleClick} 
                 className={`apply-button ${buttonText === 'Applied' ? 'applied' : ''}`}
-                // disabled={buttonText === 'Applied'}
+                disabled={buttonText === 'Applied'}
             >
                 {buttonText}
             </button>

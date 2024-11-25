@@ -27,7 +27,6 @@ const LandingPage = () => {
         const token = credentialResponse.credential;
         try {
             const response = await verifyGoogleLogin(token);
-            console.log('User logged in successfully:', response);
 
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userInfo', JSON.stringify(response.user));
@@ -54,7 +53,6 @@ const LandingPage = () => {
         }
         try {
             const response = await registerUser({ username, password, confirmPassword });
-            console.log('User registered successfully:', response);
 
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userInfo', JSON.stringify(response.user));
@@ -74,7 +72,6 @@ const LandingPage = () => {
         e.preventDefault();
         try {
             const response = await loginUser({ username, password });
-            console.log('User logged in successfully:', response);
             
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userInfo', JSON.stringify(response.user));

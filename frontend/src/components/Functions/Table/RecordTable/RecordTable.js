@@ -92,14 +92,11 @@ class RecordTable extends Component {
         const fetchRecords = async () => {
             try {
                 const records = await getRecords();
-                // console.log("records: ", records)
                 if (records.length > 0) {
                     const updatedRecords = records.map(record => ({
                         ...record,
                         isApplied: localStorage.getItem(`appliedStatus-${record._id}`) === 'true' || record.isApplied,
                     }));
-                    console.log("updatedRecords: ", updatedRecords)
-
                     this.setState({ records: updatedRecords });
                     return true; 
                 }
