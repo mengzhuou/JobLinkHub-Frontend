@@ -109,15 +109,14 @@ class ApplicationForm extends Component {
                             </select>
                         </div>
                         <div>
-                            <label>Received Interview?<span>*</span></label>
+                            <label>Received Interview?</label>
                             <select
                                 name="receivedInterview"
                                 value={this.state.receivedInterview}
                                 onChange={this.handleChange}
                             >
-                                <option value="">Received Interview</option>
-                                <option value="YES">YES</option>
-                                <option value="NO">NO</option>
+                                <option value="NO">No</option>
+                                <option value="YES">Yes</option>
                             </select>
                         </div>
                     </div>
