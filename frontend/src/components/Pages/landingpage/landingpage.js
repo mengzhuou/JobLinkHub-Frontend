@@ -16,12 +16,13 @@ const LandingPage = () => {
     useEffect(() => {
         const storedIsAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
         const storedUserInfo = JSON.parse(localStorage.getItem('userInfo'));
-
+    
         if (storedIsAuthenticated && storedUserInfo) {
             setIsAuthenticated(true);
             setUserInfo(storedUserInfo);
+            navigate('/MainPage');
         }
-    }, []);
+    }, [navigate]);
 
     const handleLoginSuccess = async (credentialResponse) => {
         const token = credentialResponse.credential;
@@ -94,9 +95,6 @@ const LandingPage = () => {
                 <div className="landing-content">
                     <h1>Welcome to JobLinkHub</h1>
                     <p>Your one-stop solution for job applications and career growth</p>
-                    {isAuthenticated && 
-                        <p>Welcome back, {userInfo.username || userInfo.name}</p>
-                    }
                 </div>
                 {!isAuthenticated && (
                     <div className="auth-container">

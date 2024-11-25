@@ -88,7 +88,7 @@ const EditRecordForm = () => {
     return (
         <div className="application-form-container">
             <form className="application-form" onSubmit={handleSubmit}>
-                <h2>Edit Application</h2>
+                <h2>Application</h2>
                 <label>Company<span>*</span></label>
                 <input 
                     type="text" 

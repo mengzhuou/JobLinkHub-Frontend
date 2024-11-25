@@ -38,7 +38,7 @@ const ProfilePage = () => {
         return (
             <div className="action-buttons-container">
             <button className="edit-button" onClick={() => handleEdit(params.data._id)}>
-                Edit
+                View
             </button>
             <button className="delete-button" onClick={() => handleDelete(params.data._id)}>
                 Delete
