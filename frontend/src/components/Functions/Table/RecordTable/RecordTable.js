@@ -92,15 +92,14 @@ class RecordTable extends Component {
         const fetchRecords = async () => {
             try {
                 const records = await getRecords();
+                // console.log("records: ", records)
                 if (records.length > 0) {
-                    // Successfully loaded records at first attemp
-                    const updatedRecords = records.map(record => {
-                        const appliedStatus = localStorage.getItem(`appliedStatus-${record._id}`);
-                        return {
-                            ...record,
-                            applied: appliedStatus === 'true'
-                        };
-                    });
+                    const updatedRecords = records.map(record => ({
+                        ...record,
+                        isApplied: localStorage.getItem(`appliedStatus-${record._id}`) === 'true' || record.isApplied,
+                    }));
+                    console.log("updatedRecords: ", updatedRecords)
+
                     this.setState({ records: updatedRecords });
                     return true; 
                 }
@@ -128,13 +127,15 @@ class RecordTable extends Component {
 
     getFilteredRecords = () => {
         const { records, filterOption } = this.state;
-        if (filterOption === 'applied') {
-            return records.filter(record => record.applied);
-        } else if (filterOption === 'notApplied') {
-            return records.filter(record => !record.applied);
-        } else {
-            return records;
-        }
+        return records.filter(record => {
+            if (filterOption === 'applied') return record.isApplied;
+            if (filterOption === 'notApplied') return !record.isApplied;
+            return true; // Default: show all
+        });
+    };
+    
+    refreshTable = () => {
+        this.loadRecords(); // Reload records when called
     };
 
     handleFilterChange = (event) => {
@@ -161,7 +162,16 @@ class RecordTable extends Component {
                     ) : (
                         <AgGridTable
                             rowData={filteredRecords}
-                            columnDefs={this.state.columnDefs}
+                            columnDefs={this.state.columnDefs.map(col => ({
+                                ...col,
+                                cellRendererFramework: col.field === "websiteLink" ? (params) => (
+                                    <LinkButton
+                                        data={params.data} // Pass the row data to LinkButton
+                                        refreshTable={this.refreshTable}
+                                        value={params.data.websiteLink} // Extract the websiteLink field
+                                    />
+                                ) : null,
+                            }))}
                             defaultColDef={{ sortable: true, resizable: true }}
                             domLayout="autoHeight"
                         />
@@ -174,6 +184,6 @@ class RecordTable extends Component {
 
 export default RecordTable;
 <div data-ref="eWrapper" class="ag-wrapper ag-picker-field-wrapper ag-picker-expanded ag-has-popup-positioned-under" tabindex="0" aria-expanded="true" role="combobox" aria-controls="ag-select-list-102" aria-label="Page Size">
-                    <div data-ref="eDisplayField" class="ag-picker-field-display" id="ag-101-display"></div>
-                    <div data-ref="eIcon" class="ag-picker-field-icon" aria-hidden="true"><span class="ag-icon ag-icon-small-down" unselectable="on" role="presentation"></span></div>
-                </div>
+    <div data-ref="eDisplayField" class="ag-picker-field-display" id="ag-101-display"></div>
+    <div data-ref="eIcon" class="ag-picker-field-icon" aria-hidden="true"><span class="ag-icon ag-icon-small-down" unselectable="on" role="presentation"></span></div>
+</div>
