@@ -48,7 +48,7 @@ const ProfilePage = () => {
     };
 
     const [columnDefs] = useState([
-        { headerName: "Company", field: "company", sortable: true, filter: true, flex: 1.4 },
+        { headerName: "Company", field: "company", sortable: true, filter: true, flex: 2 },
         { headerName: "Type", field: "type", sortable: true, filter: true, flex: 1 },
         { 
             headerName: "Job Title", 
@@ -71,7 +71,6 @@ const ProfilePage = () => {
             headerName: "Date", 
             field: "date", 
             sortable: true, 
-            filter: true, 
             flex: 1.3,
             sort: 'desc',
             valueFormatter: (params) => {
@@ -87,20 +86,6 @@ const ProfilePage = () => {
                     return 'Invalid Date';
                 }
             }
-        },
-        { headerName: "Interviewed", field: "receivedInterview", sortable: true, filter: true, flex: 1.6 },
-        { 
-            headerName: "Link", 
-            field: "websiteLink", 
-            flex: 1,
-            cellRenderer: LinkButton
-        },
-        { 
-            headerName: "Comment", 
-            field: "comment", 
-            sortable: true, 
-            flex: 1.5,
-            tooltipField: "comment", 
         },
         {
             headerName: "Actions",

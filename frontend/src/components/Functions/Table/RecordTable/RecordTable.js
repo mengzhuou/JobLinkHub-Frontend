@@ -18,7 +18,7 @@ class RecordTable extends Component {
                     field: "company", 
                     sortable: true, 
                     filter: true, 
-                    flex: 1.7 
+                    flex: 2
                 },
                 { 
                     headerName: "Type", 
@@ -48,7 +48,6 @@ class RecordTable extends Component {
                     headerName: "Date", 
                     field: "date", 
                     sortable: true, 
-                    filter: true, 
                     flex: 1.5,
                     sort: 'desc',
                     valueFormatter: (params) => {
@@ -64,12 +63,6 @@ class RecordTable extends Component {
                             return 'Invalid Date';
                         }
                     }
-                },
-                { 
-                    headerName: "Interviewed", 
-                    field: "receivedInterview", 
-                    sortable: true, 
-                    flex: 2 
                 },
                 { 
                     headerName: "Link", 
