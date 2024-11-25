@@ -157,7 +157,7 @@ class RecordTable extends Component {
 
                 <div className="RecordPageContainer ag-theme-alpine" style={{ height: 500, width: '100%' }}>
                     {filteredRecords.length === 0 ? (
-                        <div>No records found</div>
+                        <div className="table-record-error">No records found</div>
                     ) : (
                         <AgGridTable
                             rowData={filteredRecords}

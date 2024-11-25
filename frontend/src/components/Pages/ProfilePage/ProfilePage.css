@@ -73,3 +73,10 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     text-align: center;
     margin-bottom: 10px;      
 }
+
+.profile-record-error {
+    color: red;
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+}

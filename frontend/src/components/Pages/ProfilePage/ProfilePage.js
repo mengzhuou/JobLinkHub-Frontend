@@ -131,12 +131,12 @@ const ProfilePage = () => {
 
 return (
     <div className="profile-page">
-        <h1>My Applications</h1>
+        <h1>Applied Applications</h1>
         <div className="profile-table-container">
             <div className="profile-table">
             <div className="ag-theme-alpine" style={{ height: 500, width: '100%' }}>
                 {records.length === 0 ? (
-                    <div>No records found</div>
+                    <div className='profile-record-error'>No records found</div>
                 ) : (
                     <AgGridTable
                         rowData={records}
