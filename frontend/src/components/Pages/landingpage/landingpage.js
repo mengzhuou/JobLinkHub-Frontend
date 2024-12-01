@@ -27,7 +27,6 @@ const LandingPage = () => {
         const token = credentialResponse.credential;
         try {
             const response = await verifyGoogleLogin(token);
-            console.log('User logged in successfully:', response);
 
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userInfo', JSON.stringify(response.user));
@@ -54,7 +53,6 @@ const LandingPage = () => {
         }
         try {
             const response = await registerUser({ username, password, confirmPassword });
-            console.log('User registered successfully:', response);
 
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userInfo', JSON.stringify(response.user));
@@ -74,7 +72,6 @@ const LandingPage = () => {
         e.preventDefault();
         try {
             const response = await loginUser({ username, password });
-            console.log('User logged in successfully:', response);
             
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userInfo', JSON.stringify(response.user));
@@ -97,69 +94,69 @@ const LandingPage = () => {
                 <div className="landing-content">
                     <h1>Welcome to JobLinkHub</h1>
                     <p>Your one-stop solution for job applications and career growth</p>
-                    {isAuthenticated && <p>Welcome back, {userInfo.username || userInfo.name}</p>}
+                    {isAuthenticated && 
+                        <p>Welcome back, {userInfo.username || userInfo.name}</p>
+                    }
                 </div>
-                <div className="auth-container">
-                    {!isAuthenticated && (
-                        <>
-                            {formType === 'login' ? (
-                                <form onSubmit={handleManualLogin}>
-                                    <input
-                                        type="text"
-                                        placeholder="Username"
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                        required
-                                    />
-                                    <input
-                                        type="password"
-                                        placeholder="Password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required
-                                    />
-                                    <button type="submit">Login</button>
-                                    <p>Don't have an account? <span onClick={() => setFormType('register')}>Register here.</span></p>
-                                </form>
-                            ) : (
-                                <form onSubmit={handleRegister}>
-                                    <input
-                                        type="text"
-                                        placeholder="Username"
-                                        value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
-                                        required
-                                    />
-                                    <input
-                                        type="password"
-                                        placeholder="Password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required
-                                    />
-                                    <input
-                                        type="password"
-                                        placeholder="Confirm Password"
-                                        value={confirmPassword}
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                        required
-                                    />
-                                    <button type="submit">Register</button>
-                                    <p>Already have an account? <span onClick={() => setFormType('login')}>Login here.</span></p>
-                                </form>
-                            )}
-                            <div className="divider">
-                                <span>or</span>
-                            </div>
-                            <div className="google-login">
-                                <GoogleLogin
-                                    onSuccess={handleLoginSuccess}
-                                    onError={handleLoginError}
+                {!isAuthenticated && (
+                    <div className="auth-container">
+                        {formType === 'login' ? (
+                            <form onSubmit={handleManualLogin}>
+                                <input
+                                    type="text"
+                                    placeholder="Username"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    required
                                 />
-                            </div>
-                        </>
-                    )}
+                                <input
+                                    type="password"
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                                <button type="submit">Login</button>
+                                <p>Don't have an account? <span onClick={() => setFormType('register')}>Register here.</span></p>
+                            </form>
+                        ) : (
+                            <form onSubmit={handleRegister}>
+                                <input
+                                    type="text"
+                                    placeholder="Username"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                />
+                                <input
+                                    type="password"
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                                <input
+                                    type="password"
+                                    placeholder="Confirm Password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                />
+                                <button type="submit">Register</button>
+                                <p>Already have an account? <span onClick={() => setFormType('login')}>Login here.</span></p>
+                            </form>
+                        )}
+                        <div className="divider">
+                            <span>or</span>
+                        </div>
+                        <div className="google-login">
+                            <GoogleLogin
+                                onSuccess={handleLoginSuccess}
+                                onError={handleLoginError}
+                            />
+                        </div>
                 </div>
+                )}
             </div>
         </div>
     );

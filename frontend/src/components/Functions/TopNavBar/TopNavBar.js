@@ -49,13 +49,10 @@ class TopNavBar extends Component {
         localStorage.removeItem('isAuthenticated');
         localStorage.removeItem('userInfo');
         localStorage.removeItem('token');
-        console.log("Authentication info removed from localStorage");
 
         googleLogout();
-        console.log("Logged out from Google");
 
         this.props.navigate("/");
-        console.log("Navigated to home");
         window.location.reload();
         this.setState({ isDroppedDown: false, isAuthenticated: false });
     };
@@ -105,7 +102,7 @@ class TopNavBar extends Component {
                             <div className="dropdown-container">
                                 {isAuthenticated ? (
                                     <>
-                                        <div className="dropdown-content" onClick={this.mainpageNav}>MainPage</div>                                        
+                                        <div className="dropdown-content" onClick={this.mainpageNav}>Main Page</div>                                        
                                         <div className="dropdown-content" onClick={this.applicationNav}>Application</div>
                                         <div className="dropdown-content" onClick={this.batchUploadNav}>Batch Upload</div>
                                         <div className="dropdown-content" onClick={this.profileNav}>Profile</div>

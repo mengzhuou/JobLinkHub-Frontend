@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import React, { useState, useEffect } from 'react';
 import './LinkButton.css';
-import { countRecord, updateApplicationStatus, getApplicationStatus } from '../../../connector';
+import { countRecord, updateApplicationStatus } from '../../../connector';
 
 const LinkButton = (props) => {
     const [buttonText, setButtonText] = useState('Apply');
@@ -9,15 +9,8 @@ const LinkButton = (props) => {
 
     useEffect(() => {
         const fetchStatus = async () => {
-            const cachedStatus = localStorage.getItem(`appliedStatus-${props.data._id}`);
-            if (cachedStatus !== null) {
-                setButtonText(cachedStatus === 'true' ? 'Applied' : 'Apply');
-                return;
-            }
-            
             try {
-                const response = await getApplicationStatus(props.data._id);
-                const status = response.appliedStatus;
+                const status = props.data.isApplied;
                 setButtonText(status ? 'Applied' : 'Apply');
                 localStorage.setItem(`appliedStatus-${props.data._id}`, status ? 'true' : 'false');
             } catch (error) {
@@ -26,47 +19,48 @@ const LinkButton = (props) => {
         };
         fetchStatus();
     }, [props.data._id]);
-
-    const handleClick = async () => {
+   
+    const handleClick = () => {
+        window.open(props.value, '_blank');
+        setShowModal(true);
+    };
+    
+    const handleYes = async () => {
+        setButtonText("Applied");
+        localStorage.setItem(`appliedStatus-${props.data._id}`, 'true');
+        await updateApplicationStatus(props.data._id, true);
         try {
             await countRecord(props.data._id, { click: props.data.click + 1 });
-            window.open(props.value, '_blank');
-            setShowModal(true);
         } catch (error) {
             console.error("Error updating click count:", error);
         }
-    };
-
-    const handleYes = async () => {
-        setButtonText("Applied");
-        localStorage.setItem(`appliedStatus-${props.data._id}`, 'true'); 
-        await updateApplicationStatus(props.data._id, true); 
         setShowModal(false);
         if (props.refreshTable) {
-            props.refreshTable();
+            props.refreshTable(); // Refresh the records in the table
         }
-        window.location.reload(); 
     };
     
     const handleNo = async () => {
         setButtonText("Apply");
-        localStorage.setItem(`appliedStatus-${props.data._id}`, 'false'); 
+        localStorage.setItem(`appliedStatus-${props.data._id}`, 'false');
         await updateApplicationStatus(props.data._id, false);
         setShowModal(false);
-        window.location.reload(); 
-    };
+        if (props.refreshTable) {
+            props.refreshTable(); // Refresh the records in the table
+        }
+    };    
+    
 
     return (
         <div>
             <button 
                 onClick={handleClick} 
                 className={`apply-button ${buttonText === 'Applied' ? 'applied' : ''}`}
-                // disabled={buttonText === 'Applied'}
+                disabled={buttonText === 'Applied'}
             >
                 {buttonText}
             </button>
 
-            {/* Modal Code */}
             {showModal && ReactDOM.createPortal(
                 <div className="modal-overlay">
                     <div className="modal-content">

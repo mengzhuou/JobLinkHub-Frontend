@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { AgGridReact } from 'ag-grid-react';
+import AgGridTable from '../AgGridTable/AgGridTable';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './RecordTable.css';
@@ -13,14 +13,26 @@ class RecordTable extends Component {
             records: [],
             filterOption: 'all',
             columnDefs: [
-                { headerName: "Company", field: "company", sortable: true, filter: true, width: 230 },
-                { headerName: "Type", field: "type", sortable: true, filter: true, width: 130 },
+                { 
+                    headerName: "Company", 
+                    field: "company", 
+                    sortable: true, 
+                    filter: true, 
+                    flex: 2
+                },
+                { 
+                    headerName: "Type", 
+                    field: "type", 
+                    sortable: true, 
+                    filter: true, 
+                    flex: 1.2
+                },
                 { 
                     headerName: "Job Title", 
                     field: "jobTitle", 
                     sortable: true, 
                     filter: true, 
-                    width: 200,
+                    flex: 3,
                     tooltipField: "jobTitle",
                     valueFormatter: (params) => {
                         if (params.value) {
@@ -36,8 +48,7 @@ class RecordTable extends Component {
                     headerName: "Date", 
                     field: "date", 
                     sortable: true, 
-                    filter: true, 
-                    width: 120,
+                    flex: 1.5,
                     sort: 'desc',
                     valueFormatter: (params) => {
                         if (!params.value) {
@@ -53,21 +64,12 @@ class RecordTable extends Component {
                         }
                     }
                 },
-                { headerName: "Interview", field: "receivedInterview", sortable: true, filter: true, width: 120 },
                 { 
                     headerName: "Link", 
                     field: "websiteLink", 
-                    width: 95,
+                    flex: 1,
                     cellRenderer: LinkButton
-                },
-                { 
-                    headerName: "Comment", 
-                    field: "comment", 
-                    sortable: true, 
-                    width: 100,
-                    tooltipField: "comment", 
-                },
-                { headerName: "Click", field: "click", sortable: true, width: 90 },
+                }
             ]
         };
     }
@@ -75,32 +77,55 @@ class RecordTable extends Component {
     componentDidMount() {
         this.loadRecords();
     }
-
     loadRecords = async () => {
-        try {
-            const records = await getRecords();
-            const updatedRecords = records.map(record => {
-                const appliedStatus = localStorage.getItem(`appliedStatus-${record._id}`);
-                return {
-                    ...record,
-                    applied: appliedStatus === 'true'
-                };
-            });
-            this.setState({ records: updatedRecords });
-        } catch (error) {
-            console.error("Error loading records:", error);
+        let attempts = 0; 
+        const maxAttempts = 10; 
+        const delay = 3000;
+    
+        const fetchRecords = async () => {
+            try {
+                const records = await getRecords();
+                if (records.length > 0) {
+                    const updatedRecords = records.map(record => ({
+                        ...record,
+                        isApplied: localStorage.getItem(`appliedStatus-${record._id}`) === 'true' || record.isApplied,
+                    }));
+                    this.setState({ records: updatedRecords });
+                    return true; 
+                }
+                throw new Error("No records found");
+            } catch (error) {
+                console.error(`Attempt ${attempts + 1}: Error loading records:`, error);
+                return false;
+            }
+        };
+    
+        while (attempts < maxAttempts) {
+            const success = await fetchRecords();
+            if (success) break; // Exit loop if data is successfully loaded
+            attempts++;
+            if (attempts < maxAttempts) {
+                await new Promise(resolve => setTimeout(resolve, delay)); // Wait before next attempt
+            }
+        }
+    
+        if (attempts === maxAttempts) {
+            console.error("Max attempts reached. Failed to load records.");
         }
     };
+    
 
     getFilteredRecords = () => {
         const { records, filterOption } = this.state;
-        if (filterOption === 'applied') {
-            return records.filter(record => record.applied);
-        } else if (filterOption === 'notApplied') {
-            return records.filter(record => !record.applied);
-        } else {
-            return records;
-        }
+        return records.filter(record => {
+            if (filterOption === 'applied') return record.isApplied;
+            if (filterOption === 'notApplied') return !record.isApplied;
+            return true; // Default: show all
+        });
+    };
+    
+    refreshTable = () => {
+        this.loadRecords(); // Reload records when called
     };
 
     handleFilterChange = (event) => {
@@ -123,13 +148,22 @@ class RecordTable extends Component {
 
                 <div className="RecordPageContainer ag-theme-alpine" style={{ height: 500, width: '100%' }}>
                     {filteredRecords.length === 0 ? (
-                        <div>No records found</div>
+                        <div className="table-record-error">No records found</div>
                     ) : (
-                        <AgGridReact
+                        <AgGridTable
                             rowData={filteredRecords}
-                            columnDefs={this.state.columnDefs}
-                            pagination={true}                // Enable pagination
-                            paginationPageSize={14}          // Set page size to 12
+                            columnDefs={this.state.columnDefs.map(col => ({
+                                ...col,
+                                cellRendererFramework: col.field === "websiteLink" ? (params) => (
+                                    <LinkButton
+                                        data={params.data} // Pass the row data to LinkButton
+                                        refreshTable={this.refreshTable}
+                                        value={params.data.websiteLink} // Extract the websiteLink field
+                                    />
+                                ) : null,
+                            }))}
+                            defaultColDef={{ sortable: true, resizable: true }}
+                            domLayout="autoHeight"
                         />
                     )}
                 </div>
@@ -140,6 +174,6 @@ class RecordTable extends Component {
 
 export default RecordTable;
 <div data-ref="eWrapper" class="ag-wrapper ag-picker-field-wrapper ag-picker-expanded ag-has-popup-positioned-under" tabindex="0" aria-expanded="true" role="combobox" aria-controls="ag-select-list-102" aria-label="Page Size">
-                    <div data-ref="eDisplayField" class="ag-picker-field-display" id="ag-101-display"></div>
-                    <div data-ref="eIcon" class="ag-picker-field-icon" aria-hidden="true"><span class="ag-icon ag-icon-small-down" unselectable="on" role="presentation"></span></div>
-                </div>
+    <div data-ref="eDisplayField" class="ag-picker-field-display" id="ag-101-display"></div>
+    <div data-ref="eIcon" class="ag-picker-field-icon" aria-hidden="true"><span class="ag-icon ag-icon-small-down" unselectable="on" role="presentation"></span></div>
+</div>

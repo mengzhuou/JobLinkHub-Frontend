@@ -1,12 +1,3 @@
-.ag-body-horizontal-scroll-viewport::-webkit-scrollbar {
-    display: none; /* For Chrome, Safari, and Opera */
-}
-
-.ag-body-horizontal-scroll-viewport {
-    -ms-overflow-style: none; /* For Internet Explorer and Edge */
-    scrollbar-width: none; /* For Firefox */
-}
-
 .main-page-body::-webkit-scrollbar {
     display: none; /* For Chrome, Safari, and Opera */
 }
@@ -16,48 +7,25 @@
     scrollbar-width: none; /* For Firefox */
     overflow-y: scroll; /* Ensure content is still scrollable */
 }
-.ag-root-wrapper.ag-layout-normal {
-    height: 75vh !important;
-}
-
-.ag-tooltip {
-    background-color: #fff;
-    padding: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    max-width: 250px;
-    white-space: pre-wrap;
-}
-/* Apply a linear gradient to the header row */
-.ag-header {
-    background-image: linear-gradient(to right, rgb(69, 79, 51), rgb(182, 147, 130));
-    color: white;
-}
-
-.ag-header-cell {
-    color: white;
-    font-weight: bold;
-    border: none; /* Optional: remove default borders for a smoother look */
-}
-
-/* Optional: Ensure text is centered in each header cell */
-.ag-header-cell-label {
-    justify-content: center;
-}
 
 .filter-container {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
 }
+
 .filter-container label {
     margin-right: 5px;
 }
+
 .filter-container select {
     padding: 5px;
     font-size: 16px;
     border-radius: 5px;
 }
-.ag-paging-row-summary-panel, .ag-label, .ag-wrapper, .ag-picker-field-wrapper{
-    display:none;
+
+.table-record-error {
+    color: red;
+    margin-top: 30px;
+    font-size: 20px;
 }

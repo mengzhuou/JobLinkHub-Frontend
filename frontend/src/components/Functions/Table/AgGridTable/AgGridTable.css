@@ -11,7 +11,7 @@ html {
 }
 
 .page-container {
-    width: 70vw;
+    width: 80vw;
     height: auto;
     overflow-y: visible;
 }
@@ -25,14 +25,15 @@ html {
     overflow-y: auto;
 }
 
-.ag-header, .ag-advanced-filter-header {
+.ag-header,
+.ag-advanced-filter-header {
     background-color: #FFFDF8;
-    border-top: 2px solid #CB997E;
-    border-bottom: 2px solid #CB997E;
+    border-top: 2px solid #3361AE;
+    border-bottom: 2px solid #3361AE;
 }
 
 .ag-row {
-    border-bottom: 2px solid #CB997E;
+    border-bottom: 2px solid #3361AE;
     background-color: #FFFDF8;
 }
 
@@ -40,7 +41,8 @@ html {
     background-color: transparent;
 }
 
-.ag-header-group-cell-label, .ag-cell-label-container {
+.ag-header-group-cell-label,
+.ag-cell-label-container {
     font-size: 24px;
 }
 
@@ -49,18 +51,29 @@ html {
 }
 
 .ag-paging-page-size {
-    display: none; 
+    display: none;
 }
 
 .ag-paging-panel {
     background-color: #FFFDF8;
-    color: #CB997E;
+    color: #3361AE;
     border-top: transparent;
-    font-size: 15px;
+    font-size: 20px;
 }
 
 .ag-icon {
-    color: #CB997E;
+    color: #3361AE;
     font-weight: bold;
-    font-size: 15px;
+    font-size: 20px;
+}
+
+.ag-theme-alpine .ag-cell {
+    user-select: text; /* Enable text selection */
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+}
+
+.ag-theme-alpine .ag-header-cell {
+    user-select: none; /* Keep the header non-selectable if desired */
 }

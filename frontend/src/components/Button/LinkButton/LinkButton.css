@@ -19,7 +19,7 @@
 
 .apply-button.applied {
     background-color: #808080; /* Gray color for Applied */
-    /* cursor: not-allowed; */
+    cursor: not-allowed;
 }
 
 .apply-button.applied:hover {

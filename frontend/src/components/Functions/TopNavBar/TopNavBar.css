@@ -2,7 +2,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-image: linear-gradient(to right, rgb(69, 79, 51), rgb(182, 147, 130));   
+    background-color: #3361AE;
     position: fixed;
     top: 0; 
     left: 0;

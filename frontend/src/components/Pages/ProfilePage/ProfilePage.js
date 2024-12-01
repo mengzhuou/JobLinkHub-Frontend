@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getRecordsByUser, deleteRecord } from '../../../connector'; // Import the functions to get and delete records
-import { AgGridReact } from 'ag-grid-react';
+import AgGridTable from '../../Functions/Table/AgGridTable/AgGridTable';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './ProfilePage.css';
@@ -48,14 +48,14 @@ const ProfilePage = () => {
     };
 
     const [columnDefs] = useState([
-        { headerName: "Company", field: "company", sortable: true, filter: true, width: 230 },
-        { headerName: "Type", field: "type", sortable: true, filter: true, width: 130 },
+        { headerName: "Company", field: "company", sortable: true, filter: true, flex: 2 },
+        { headerName: "Type", field: "type", sortable: true, filter: true, flex: 1 },
         { 
             headerName: "Job Title", 
             field: "jobTitle", 
             sortable: true, 
             filter: true, 
-            width: 200,
+            flex: 2,
             tooltipField: "jobTitle",
             valueFormatter: (params) => {
                 if (params.value) {
@@ -71,8 +71,7 @@ const ProfilePage = () => {
             headerName: "Date", 
             field: "date", 
             sortable: true, 
-            filter: true, 
-            width: 120,
+            flex: 1.3,
             sort: 'desc',
             valueFormatter: (params) => {
                 if (!params.value) {
@@ -88,25 +87,10 @@ const ProfilePage = () => {
                 }
             }
         },
-        { headerName: "Interview", field: "receivedInterview", sortable: true, filter: true, width: 120 },
-        { 
-            headerName: "Link", 
-            field: "websiteLink", 
-            width: 95,
-            cellRenderer: LinkButton
-        },
-        { 
-            headerName: "Comment", 
-            field: "comment", 
-            sortable: true, 
-            width: 120,
-            tooltipField: "comment", 
-        },
-        { headerName: "Click", field: "click", sortable: true, width: 90 },
         {
             headerName: "Actions",
             field: "actions",
-            width: 150,
+            flex: 1,
             cellRenderer: ActionCellRenderer, // Referencing the custom renderer
         },
     ]);
@@ -132,17 +116,18 @@ const ProfilePage = () => {
 
 return (
     <div className="profile-page">
-        <h1>My Applications</h1>
+        <h1>Applied Applications</h1>
         <div className="profile-table-container">
             <div className="profile-table">
             <div className="ag-theme-alpine" style={{ height: 500, width: '100%' }}>
                 {records.length === 0 ? (
-                    <div>No records found</div>
+                    <div className='profile-record-error'>No records found</div>
                 ) : (
-                    <AgGridReact
+                    <AgGridTable
                         rowData={records}
                         columnDefs={columnDefs}
-                        tooltipShowDelay={0}
+                        defaultColDef={{ sortable: true, resizable: true }}
+                        domLayout="autoHeight"
                     />
                 )}
                 </div>
