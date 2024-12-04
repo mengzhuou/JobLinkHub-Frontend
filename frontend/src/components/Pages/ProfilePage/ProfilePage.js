@@ -4,7 +4,6 @@ import AgGridTable from '../../Functions/Table/AgGridTable/AgGridTable';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import './ProfilePage.css';
-import LinkButton from '../../Button/LinkButton/LinkButton';
 import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
