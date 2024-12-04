@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { updateRecord, getOneRecordByRecordId } from '../../../connector';
+import './EditRecordForm.css';
+
 
 const EditRecordForm = () => {
     const { id } = useParams(); // Retrieve the record ID from the route
@@ -97,7 +99,7 @@ const EditRecordForm = () => {
     return (
         <div className="application-form-container">
             <form className="application-form" onSubmit={handleSubmit}>
-                <h2>Application</h2>
+                <h2>Edit Application</h2>
                 <label>Company<span>*</span></label>
                 <input
                     type="text"
@@ -140,7 +142,7 @@ const EditRecordForm = () => {
                                 <select
                                     name="receivedOffer"
                                     value={record.receivedOffer}
-                                    onChange={this.handleChange}
+                                    onChange={handleChange}
                                 >
                                     <option value="No">No</option>
                                     <option value="Yes">Yes</option>
@@ -185,7 +187,17 @@ const EditRecordForm = () => {
                     <span>{commentLength}/250</span>
                     {commentError && <span className="error-message">{commentError}</span>}
                 </div>
-                <button type="submit" className="submit-button">Save Changes</button>
+
+                <div className='bottom-btn'>
+                    <button 
+                        type="cancel" 
+                        className="edit-cancel-button"
+                        onClick={() => navigate('/profile')} 
+                    >
+                        Cancel
+                    </button>
+                    <button type="submit" className="edit-submit-button">Save Changes</button>
+                </div>
             </form>
         </div>
     );

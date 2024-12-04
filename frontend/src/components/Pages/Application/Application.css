@@ -49,23 +49,6 @@
     height: 100px;
 }
 
-.submit-button {
-    background-color: #6e8b94; /* Muted blue-gray for a modern look */
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1rem;
-    text-align: center;
-    width: 100%;
-    transition: background-color 0.3s ease;
-}
-
-.submit-button:hover {
-    background-color: #556e78; /* Darker shade for hover */
-}
-
 .line {
     display: flex;
     gap: 5%;
@@ -94,6 +77,52 @@ label span {
     color: red; /* Red asterisk for required fields */
 }
 
+
+.application-cancel-button {
+    padding: 16px 20px;
+    font-size: calc(0.4vw + 1vh) !important;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    width: 200px;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    margin: 0 10px;
+    max-width: 200px;
+    flex: 1 1 auto;
+    background-color: #3361AE;
+}
+
+.application-submit-button {
+    padding: 16px 20px;
+    font-size: calc(0.4vw + 1vh) !important;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    width: 200px;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    margin: 0 10px;
+    max-width: 200px;
+    flex: 1 1 auto;
+    background-color: #3361AE;
+}
+
+.application-cancel-button:hover, .application-submit-button:hover {
+    background-color: #b07865;
+}
+
+.bottom-btn {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+
 /* Mobile adjustments */
 @media (max-width: 768px) {
     .application-form {
@@ -102,10 +131,6 @@ label span {
 
     .line {
         flex-direction: column;
-    }
-
-    .submit-button {
-        font-size: 0.9rem;
     }
 }
 

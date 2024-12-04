@@ -1,0 +1,43 @@
+.edit-cancel-button {
+    padding: 16px 20px;
+    font-size: calc(0.4vw + 1vh) !important;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    width: 200px;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    margin: 0 10px;
+    max-width: 200px;
+    flex: 1 1 auto;
+    background-color: #3361AE;
+}
+
+.edit-submit-button {
+    padding: 16px 20px;
+    font-size: calc(0.4vw + 1vh) !important;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    width: 200px;
+    box-sizing: border-box;
+    padding: 10px 20px;
+    margin: 0 10px;
+    max-width: 200px;
+    flex: 1 1 auto;
+    background-color: #3361AE;
+}
+
+.edit-cancel-button:hover, .edit-submit-button:hover {
+    background-color: #b07865;
+}
+
+.bottom-btn {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
