@@ -87,7 +87,7 @@ class ApplicationForm extends Component {
     };
 
     render() {
-        const { comment, commentError } = this.state;
+        const { comment, commentError, receivedInterview } = this.state;
 
         return (
             <div className="application-form-container">
@@ -100,21 +100,21 @@ class ApplicationForm extends Component {
                         value={this.state.company}
                         onChange={this.handleChange}
                     />
+                    <div>
+                        <label>PositionType<span>*</span></label>
+                        <select
+                            name="positionType"
+                            value={this.state.positionType}
+                            onChange={this.handleChange}
+                        >
+                            <option value="">Type of Position</option>
+                            <option value="Intern">Intern</option>
+                            <option value="Part-Time">Part-Time</option>
+                            <option value="Full-Time">Full-Time</option>
+                            <option value="Coop">Coop</option>
+                        </select>
+                    </div>
                     <div className='line'>
-                        <div>
-                            <label>PositionType<span>*</span></label>
-                            <select
-                                name="positionType"
-                                value={this.state.positionType}
-                                onChange={this.handleChange}
-                            >
-                                <option value="">Type of Position</option>
-                                <option value="Intern">Intern</option>
-                                <option value="Part-Time">Part-Time</option>
-                                <option value="Full-Time">Full-Time</option>
-                                <option value="Coop">Coop</option>
-                            </select>
-                        </div>
                         <div>
                             <label>Received Interview?</label>
                             <select
@@ -126,17 +126,19 @@ class ApplicationForm extends Component {
                                 <option value="YES">Yes</option>
                             </select>
                         </div>
-                        <div>
-                            <label>Received Offer?</label>
-                            <select
-                                name="receivedOffer"
-                                value={this.state.receivedOffer}
-                                onChange={this.handleChange}
-                            >
-                                <option value="NO">No</option>
-                                <option value="YES">Yes</option>
-                            </select>
-                        </div>
+                        { receivedInterview === 'YES' && (
+                            <div>
+                                <label>Received Offer?</label>
+                                <select
+                                    name="receivedOffer"
+                                    value={this.state.receivedOffer}
+                                    onChange={this.handleChange}
+                                >
+                                    <option value="NO">No</option>
+                                    <option value="YES">Yes</option>
+                                </select>
+                            </div>
+                        )}
                     </div>
                     <label>Job Title<span>*</span></label>
                     <input

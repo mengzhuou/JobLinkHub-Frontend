@@ -213,6 +213,6 @@ export {
     countRecord,
     getProfileByUserId,
     deleteRecord,
-    updateProfileByNewRecord   
+    updateProfileByNewRecord,
     getRecordById, 
 };

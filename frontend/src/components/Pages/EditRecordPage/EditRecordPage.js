@@ -26,7 +26,7 @@ const EditRecordForm = () => {
         const fetchRecord = async () => {
             try {
                 const recordData = await getProfileByUserId(id);
-                setRecord(recordData);
+                setRecord(recordData.appliedRecords);
                 setCommentLength(recordData.comment.length);
             } catch (error) {
                 console.error('Error fetching record:', error);
@@ -98,24 +98,24 @@ const EditRecordForm = () => {
                     onChange={handleChange}
                     required
                 />
+                <div>
+                    <label>Position Type<span>*</span></label>
+                    <select
+                        name="positionType"
+                        value={record.positionType}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="">Select Position</option>
+                        <option value="Intern">Intern</option>
+                        <option value="Part-Time">Part-Time</option>
+                        <option value="Full-Time">Full-Time</option>
+                        <option value="Coop">Coop</option>
+                    </select>
+                </div>
                 <div className="line">
                     <div>
-                        <label>Position Type<span>*</span></label>
-                        <select
-                            name="positionType"
-                            value={record.positionType}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="">Select Position</option>
-                            <option value="Intern">Intern</option>
-                            <option value="Part-Time">Part-Time</option>
-                            <option value="Full-Time">Full-Time</option>
-                            <option value="Coop">Coop</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Received Interview?<span>*</span></label>
+                        <label>Received Interview?</label>
                         <select
                             name="receivedInterview"
                             value={record.receivedInterview}
@@ -126,17 +126,19 @@ const EditRecordForm = () => {
                             <option value="YES">YES</option>
                         </select>
                     </div>
-                    <div>
-                        <label>Received Offer?</label>
-                        <select 
-                            name="receivedOffer" 
-                            value={record.receivedOffer} 
-                            onChange={handleChange}
-                        >
-                            <option value="NO">NO</option>
-                            <option value="YES">YES</option>
-                        </select>
-                    </div>
+                    { this.state.receivedInterview === 'YES' && (
+                            <div>
+                                <label>Received Offer?</label>
+                                <select
+                                    name="receivedOffer"
+                                    value={this.state.receivedOffer}
+                                    onChange={this.handleChange}
+                                >
+                                    <option value="NO">No</option>
+                                    <option value="YES">Yes</option>
+                                </select>
+                            </div>
+                        )}
                 </div>
                 <label>Job Title<span>*</span></label>
                 <input

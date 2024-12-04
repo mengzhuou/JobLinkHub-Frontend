@@ -85,6 +85,7 @@ class RecordTable extends Component {
         const fetchRecords = async () => {
             try {
                 const records = await getRecords();
+                console.log("records: ", records)
                 if (records.length > 0) {
                     const updatedRecords = records.map(record => ({
                         ...record,
