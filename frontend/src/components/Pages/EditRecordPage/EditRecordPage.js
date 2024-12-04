@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { updateRecord, getProfileByUserId } from '../../../connector';
 
 const EditRecordForm = () => {
-    const { id } = useParams();
+    const { id } = useParams(); // Retrieve the record ID from the route
     const navigate = useNavigate();
     const [record, setRecord] = useState({
         company: '',
@@ -20,7 +20,6 @@ const EditRecordForm = () => {
     const [maxDate, setMaxDate] = useState('');
 
     useEffect(() => {
-        // Calculate today's date in YYYY-MM-DD format
         const today = new Date().toISOString().split('T')[0];
         setMaxDate(today);
 
@@ -31,6 +30,7 @@ const EditRecordForm = () => {
                 setCommentLength(recordData.comment.length);
             } catch (error) {
                 console.error('Error fetching record:', error);
+                alert('Error fetching record data. Please try again.');
             }
         };
 
@@ -45,14 +45,14 @@ const EditRecordForm = () => {
             if (length > 250) {
                 setRecord((prevState) => ({
                     ...prevState,
-                    comment: value.substring(0, 250)
+                    comment: value.substring(0, 250),
                 }));
                 setCommentLength(250);
-                setCommentError('Comment cannot be more than 250 characters');
+                setCommentError('Comment cannot exceed 250 characters.');
             } else {
                 setRecord((prevState) => ({
                     ...prevState,
-                    [name]: value
+                    [name]: value,
                 }));
                 setCommentLength(length);
                 setCommentError('');
@@ -60,7 +60,7 @@ const EditRecordForm = () => {
         } else {
             setRecord((prevState) => ({
                 ...prevState,
-                [name]: value
+                [name]: value,
             }));
         }
     };
@@ -76,37 +76,38 @@ const EditRecordForm = () => {
                 receivedInterview: record.receivedInterview === 'YES',
                 receivedOffer: record.receivedOffer === 'YES',
                 websiteLink: record.applicationLink,
-                comment: record.comment
+                comment: record.comment,
             });
-            alert("Record updated successfully.");
-            navigate('/profile'); 
+            alert('Record updated successfully.');
+            navigate('/profile');
         } catch (error) {
             console.error('Error updating record:', error);
-            alert("Something went wrong.");
+            alert('Failed to update record. Please try again.');
         }
     };
-
 
     return (
         <div className="application-form-container">
             <form className="application-form" onSubmit={handleSubmit}>
                 <h2>Application</h2>
                 <label>Company<span>*</span></label>
-                <input 
-                    type="text" 
-                    name="company" 
-                    value={record.company} 
-                    onChange={handleChange} 
+                <input
+                    type="text"
+                    name="company"
+                    value={record.company}
+                    onChange={handleChange}
+                    required
                 />
                 <div className="line">
                     <div>
-                        <label>PositionType<span>*</span></label>
-                        <select 
-                            name="positionType" 
-                            value={record.positionType} 
+                        <label>Position Type<span>*</span></label>
+                        <select
+                            name="positionType"
+                            value={record.positionType}
                             onChange={handleChange}
+                            required
                         >
-                            <option value="">Type of Position</option>
+                            <option value="">Select Position</option>
                             <option value="Intern">Intern</option>
                             <option value="Part-Time">Part-Time</option>
                             <option value="Full-Time">Full-Time</option>
@@ -115,10 +116,11 @@ const EditRecordForm = () => {
                     </div>
                     <div>
                         <label>Received Interview?<span>*</span></label>
-                        <select 
-                            name="receivedInterview" 
-                            value={record.receivedInterview} 
+                        <select
+                            name="receivedInterview"
+                            value={record.receivedInterview}
                             onChange={handleChange}
+                            required
                         >
                             <option value="NO">NO</option>
                             <option value="YES">YES</option>
@@ -137,33 +139,37 @@ const EditRecordForm = () => {
                     </div>
                 </div>
                 <label>Job Title<span>*</span></label>
-                <input 
-                    type="text" 
-                    name="jobTitle" 
-                    value={record.jobTitle} 
-                    onChange={handleChange} 
+                <input
+                    type="text"
+                    name="jobTitle"
+                    value={record.jobTitle}
+                    onChange={handleChange}
+                    required
                 />
                 <label>Date Applied<span>*</span></label>
-                <input 
-                    type="date" 
-                    id="date-applied" 
-                    name="dateApplied" 
-                    value={record.dateApplied} 
-                    onChange={handleChange} 
-                    max={maxDate} // Set the max attribute here
+                <input
+                    type="date"
+                    id="date-applied"
+                    name="dateApplied"
+                    value={record.dateApplied}
+                    onChange={handleChange}
+                    max={maxDate}
+                    required
                 />
                 <label>Application Link<span>*</span></label>
-                <input 
-                    type="url" 
-                    name="applicationLink" 
-                    value={record.applicationLink} 
-                    onChange={handleChange} 
+                <input
+                    type="url"
+                    name="applicationLink"
+                    value={record.applicationLink}
+                    onChange={handleChange}
+                    required
                 />
                 <label>Comment</label>
-                <textarea 
-                    name="comment" 
-                    value={record.comment} 
-                    onChange={handleChange} 
+                <textarea
+                    name="comment"
+                    value={record.comment}
+                    onChange={handleChange}
+                    maxLength="250"
                 />
                 <div className="comment-info">
                     <span>{commentLength}/250</span>

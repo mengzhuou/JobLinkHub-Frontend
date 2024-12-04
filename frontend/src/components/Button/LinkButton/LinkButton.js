@@ -19,7 +19,6 @@ const LinkButton = (props) => {
         };
         fetchStatus();
     }, [props.data._id, props.data.isApplied]);
-   
     const handleClick = () => {
         window.open(props.value, '_blank');
         setShowModal(true);
