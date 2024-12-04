@@ -46,7 +46,7 @@ class RecordTable extends Component {
                 },
                 { 
                     headerName: "Date", 
-                    field: "date", 
+                    field: "appliedDate", 
                     sortable: true, 
                     flex: 1.5,
                     sort: 'desc',
@@ -55,10 +55,10 @@ class RecordTable extends Component {
                             return 'No Date Provided';
                         }
                         
-                        const date = new Date(params.value);
+                        const appliedDate = new Date(params.value);
                         
-                        if (!isNaN(date.getTime())) {
-                            return date.toISOString().split('T')[0]; 
+                        if (!isNaN(appliedDate.getTime())) {
+                            return appliedDate.toISOString().split('T')[0]; 
                         } else {
                             return 'Invalid Date';
                         }

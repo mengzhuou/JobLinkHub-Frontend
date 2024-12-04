@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { updateRecord, getRecordsByUser } from '../../../connector';
+import { updateRecord, getProfileByUserId } from '../../../connector';
 
 const EditRecordForm = () => {
     const { id } = useParams();
@@ -13,6 +13,7 @@ const EditRecordForm = () => {
         dateApplied: '',
         applicationLink: '',
         comment: '',
+        receivedOffer: ''
     });
     const [commentLength, setCommentLength] = useState(0);
     const [commentError, setCommentError] = useState('');
@@ -25,7 +26,7 @@ const EditRecordForm = () => {
 
         const fetchRecord = async () => {
             try {
-                const recordData = await getRecordsByUser(id);
+                const recordData = await getProfileByUserId(id);
                 setRecord(recordData);
                 setCommentLength(recordData.comment.length);
             } catch (error) {
@@ -71,8 +72,9 @@ const EditRecordForm = () => {
                 company: record.company,
                 type: record.positionType,
                 jobTitle: record.jobTitle,
-                date: record.dateApplied,
+                appliedDate: record.dateApplied,
                 receivedInterview: record.receivedInterview === 'YES',
+                receivedOffer: record.receivedOffer === 'YES',
                 websiteLink: record.applicationLink,
                 comment: record.comment
             });
@@ -118,9 +120,19 @@ const EditRecordForm = () => {
                             value={record.receivedInterview} 
                             onChange={handleChange}
                         >
-                            <option value="">Received Interview</option>
-                            <option value="YES">YES</option>
                             <option value="NO">NO</option>
+                            <option value="YES">YES</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Received Offer?</label>
+                        <select 
+                            name="receivedOffer" 
+                            value={record.receivedOffer} 
+                            onChange={handleChange}
+                        >
+                            <option value="NO">NO</option>
+                            <option value="YES">YES</option>
                         </select>
                     </div>
                 </div>

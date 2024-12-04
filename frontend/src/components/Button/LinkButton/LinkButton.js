@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import React, { useState, useEffect } from 'react';
 import './LinkButton.css';
-import { countRecord, updateApplicationStatus } from '../../../connector';
+import { countRecord } from '../../../connector';
 
 const LinkButton = (props) => {
     const [buttonText, setButtonText] = useState('Apply');
@@ -18,7 +18,7 @@ const LinkButton = (props) => {
             }
         };
         fetchStatus();
-    }, [props.data._id]);
+    }, [props.data._id, props.data.isApplied]);
    
     const handleClick = () => {
         window.open(props.value, '_blank');
@@ -28,7 +28,7 @@ const LinkButton = (props) => {
     const handleYes = async () => {
         setButtonText("Applied");
         localStorage.setItem(`appliedStatus-${props.data._id}`, 'true');
-        await updateApplicationStatus(props.data._id, true);
+        // await updateApplicationStatus(props.data._id, true);
         try {
             await countRecord(props.data._id, { click: props.data.click + 1 });
         } catch (error) {
@@ -43,7 +43,7 @@ const LinkButton = (props) => {
     const handleNo = async () => {
         setButtonText("Apply");
         localStorage.setItem(`appliedStatus-${props.data._id}`, 'false');
-        await updateApplicationStatus(props.data._id, false);
+        // await updateApplicationStatus(props.data._id, false);
         setShowModal(false);
         if (props.refreshTable) {
             props.refreshTable(); // Refresh the records in the table

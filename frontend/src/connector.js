@@ -142,10 +142,10 @@ const logoutUser = () => {
     window.location.reload(); // Reload the page or redirect to login
 };
 
-const getRecordsByUser = async (userId) => {
+const getProfileByUserId = async (userId) => {
     const token = localStorage.getItem('token');
     try {
-        const res = await axios.get(`${BACKEND_URL}/records/user/${userId}`, {
+        const res = await axios.get(`${BACKEND_URL}/profile/${userId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -170,26 +170,22 @@ const deleteRecord = async (id) => {
     }
 };
 
-const updateApplicationStatus = async (id, status) => {
+
+const updateProfileByNewRecord = async (userId, recordId) => {
     const token = localStorage.getItem('token');
     try {
-        const res = await axios.patch(`${BACKEND_URL}/records/${id}/status`, { status }, {
+        const res = await axios.post(`${BACKEND_URL}/profiles/${userId}/new-record`, recordId, {
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`, // Attach token for protected route
             },
         });
         return res.data;
     } catch (error) {
-        if (error.response && error.response.status === 404) {
-            console.error("Record not found:", error);
-        } else {
-            console.error("Error updating application status:", error);
-        }
+        console.error("Error updating profile with new record:", error);
         throw error;
     }
 };
-
 
 
 export {
@@ -201,7 +197,7 @@ export {
     updateRecord,
     logoutUser,
     countRecord,
-    getRecordsByUser,
+    getProfileByUserId,
     deleteRecord,
-    updateApplicationStatus,   
+    updateProfileByNewRecord   
 };

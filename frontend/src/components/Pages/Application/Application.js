@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createRecord } from '../../../connector.js';
+import { createRecord, updateProfileByNewRecord } from '../../../connector.js';
 import './Application.css';
 
 class ApplicationForm extends Component {
@@ -9,6 +9,7 @@ class ApplicationForm extends Component {
             company: '',
             positionType: '',
             receivedInterview: '',
+            receivedOffer: '',
             jobTitle: '',
             dateApplied: '',
             applicationLink: '',
@@ -56,21 +57,27 @@ class ApplicationForm extends Component {
 
     handleCreateRecord = async () => {
         const userId = JSON.parse(localStorage.getItem('userInfo'))._id;
-        const { company, positionType, receivedInterview, jobTitle, dateApplied, applicationLink, comment } = this.state;
+        const { company, positionType, receivedInterview, jobTitle, dateApplied, applicationLink, comment, receivedOffer } = this.state;
         const recordData = {
             company,
             type: positionType,
             jobTitle,
-            date: dateApplied,
+            appliedDate: dateApplied,
             receivedInterview: receivedInterview === 'YES',
+            receivedOffer: receivedOffer === 'YES',
             websiteLink: applicationLink,
             comment: comment || '',
             click: 1,
             appliedBy: [userId]
         };
 
+        // console.log("recordData: ", recordData)
+
         try {
-            await createRecord(recordData);
+            const newRecord = await createRecord(recordData);
+            
+            // update the user's profile with the new record ID
+            await updateProfileByNewRecord(userId, { recordId: newRecord._id });
             alert("Thank you! Your record has been saved.");
             window.location.href = '/MainPage';
         } catch (error) {
@@ -113,6 +120,17 @@ class ApplicationForm extends Component {
                             <select
                                 name="receivedInterview"
                                 value={this.state.receivedInterview}
+                                onChange={this.handleChange}
+                            >
+                                <option value="NO">No</option>
+                                <option value="YES">Yes</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Received Offer?</label>
+                            <select
+                                name="receivedOffer"
+                                value={this.state.receivedOffer}
                                 onChange={this.handleChange}
                             >
                                 <option value="NO">No</option>
