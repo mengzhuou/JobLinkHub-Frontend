@@ -126,12 +126,12 @@ const EditRecordForm = () => {
                             <option value="YES">YES</option>
                         </select>
                     </div>
-                    { this.state.receivedInterview === 'YES' && (
+                    { record.receivedInterview === 'YES' && (
                             <div>
                                 <label>Received Offer?</label>
                                 <select
                                     name="receivedOffer"
-                                    value={this.state.receivedOffer}
+                                    value={record.receivedOffer}
                                     onChange={this.handleChange}
                                 >
                                     <option value="NO">No</option>
