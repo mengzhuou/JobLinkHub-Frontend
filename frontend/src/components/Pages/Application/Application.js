@@ -63,8 +63,8 @@ class ApplicationForm extends Component {
             type: positionType,
             jobTitle,
             appliedDate: dateApplied,
-            receivedInterview: receivedInterview === 'YES',
-            receivedOffer: receivedOffer === 'YES',
+            receivedInterview: receivedInterview === 'Yes',
+            receivedOffer: receivedOffer === 'Yes',
             websiteLink: applicationLink,
             comment: comment || '',
             click: 1,
@@ -122,11 +122,11 @@ class ApplicationForm extends Component {
                                 value={this.state.receivedInterview}
                                 onChange={this.handleChange}
                             >
-                                <option value="NO">No</option>
-                                <option value="YES">Yes</option>
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
                             </select>
                         </div>
-                        { receivedInterview === 'YES' && (
+                        { receivedInterview === 'Yes' && (
                             <div>
                                 <label>Received Offer?</label>
                                 <select
@@ -134,8 +134,8 @@ class ApplicationForm extends Component {
                                     value={this.state.receivedOffer}
                                     onChange={this.handleChange}
                                 >
-                                    <option value="NO">No</option>
-                                    <option value="YES">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
                                 </select>
                             </div>
                         )}

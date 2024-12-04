@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { updateRecord, getProfileByUserId } from '../../../connector';
+import { updateRecord, getOneRecordByRecordId } from '../../../connector';
 
 const EditRecordForm = () => {
     const { id } = useParams(); // Retrieve the record ID from the route
@@ -10,8 +10,8 @@ const EditRecordForm = () => {
         positionType: '',
         receivedInterview: '',
         jobTitle: '',
-        dateApplied: '',
-        applicationLink: '',
+        appliedDate: '',
+        websiteLink: '',
         comment: '',
         receivedOffer: ''
     });
@@ -25,8 +25,16 @@ const EditRecordForm = () => {
 
         const fetchRecord = async () => {
             try {
-                const recordData = await getProfileByUserId(id);
-                setRecord(recordData.appliedRecords);
+                console.log("id: ", id)
+                const recordData = await getOneRecordByRecordId(id);
+                console.log("recordData: ", recordData)
+
+                setRecord({
+                    ...recordData,
+                    appliedDate: recordData.appliedDate
+                        ? new Date(recordData.appliedDate).toISOString().split('T')[0]
+                        : '',
+                });
                 setCommentLength(recordData.comment.length);
             } catch (error) {
                 console.error('Error fetching record:', error);
@@ -72,10 +80,10 @@ const EditRecordForm = () => {
                 company: record.company,
                 type: record.positionType,
                 jobTitle: record.jobTitle,
-                appliedDate: record.dateApplied,
-                receivedInterview: record.receivedInterview === 'YES',
-                receivedOffer: record.receivedOffer === 'YES',
-                websiteLink: record.applicationLink,
+                appliedDate: record.appliedDate,
+                receivedInterview: record.receivedInterview === 'Yes',
+                receivedOffer: record.receivedOffer === 'Yes',
+                websiteLink: record.websiteLink,
                 comment: record.comment,
             });
             alert('Record updated successfully.');
@@ -102,7 +110,7 @@ const EditRecordForm = () => {
                     <label>Position Type<span>*</span></label>
                     <select
                         name="positionType"
-                        value={record.positionType}
+                        value={record.type}
                         onChange={handleChange}
                         required
                     >
@@ -122,11 +130,11 @@ const EditRecordForm = () => {
                             onChange={handleChange}
                             required
                         >
-                            <option value="NO">NO</option>
-                            <option value="YES">YES</option>
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
                         </select>
                     </div>
-                    { record.receivedInterview === 'YES' && (
+                    { record.receivedInterview === 'Yes' && (
                             <div>
                                 <label>Received Offer?</label>
                                 <select
@@ -134,8 +142,8 @@ const EditRecordForm = () => {
                                     value={record.receivedOffer}
                                     onChange={this.handleChange}
                                 >
-                                    <option value="NO">No</option>
-                                    <option value="YES">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Yes">Yes</option>
                                 </select>
                             </div>
                         )}
@@ -152,8 +160,8 @@ const EditRecordForm = () => {
                 <input
                     type="date"
                     id="date-applied"
-                    name="dateApplied"
-                    value={record.dateApplied}
+                    name="appliedDate"
+                    value={record.appliedDate}
                     onChange={handleChange}
                     max={maxDate}
                     required
@@ -161,8 +169,8 @@ const EditRecordForm = () => {
                 <label>Application Link<span>*</span></label>
                 <input
                     type="url"
-                    name="applicationLink"
-                    value={record.applicationLink}
+                    name="websiteLink"
+                    value={record.websiteLink}
                     onChange={handleChange}
                     required
                 />

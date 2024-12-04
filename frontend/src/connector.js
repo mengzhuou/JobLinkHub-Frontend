@@ -187,7 +187,7 @@ const updateProfileByNewRecord = async (userId, recordId) => {
     }
 };
 
-const getRecordById = async (id) => {
+const getOneRecordByRecordId = async (id) => {
     const token = localStorage.getItem('token');
     try {
         const res = await axios.get(`${BACKEND_URL}/records/${id}`, {
@@ -214,5 +214,5 @@ export {
     getProfileByUserId,
     deleteRecord,
     updateProfileByNewRecord,
-    getRecordById, 
+    getOneRecordByRecordId, 
 };
