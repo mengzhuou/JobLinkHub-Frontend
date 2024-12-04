@@ -190,6 +190,20 @@ const updateApplicationStatus = async (id, status) => {
     }
 };
 
+const getRecordById = async (id) => {
+    const token = localStorage.getItem('token');
+    try {
+        const res = await axios.get(`${BACKEND_URL}/records/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`, // Attach token if necessary
+            },
+        });
+        return res.data;
+    } catch (error) {
+        console.error("Error fetching record by ID:", error);
+        throw error;
+    }
+};
 
 
 export {
@@ -203,5 +217,6 @@ export {
     countRecord,
     getRecordsByUser,
     deleteRecord,
-    updateApplicationStatus,   
+    updateApplicationStatus,  
+    getRecordById, 
 };
