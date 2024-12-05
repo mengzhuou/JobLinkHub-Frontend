@@ -29,9 +29,8 @@ const LinkButton = (props) => {
     
     const handleYes = async () => {
         setButtonText("Applied");
-        const newRecordId = await createRecordByRecordId(props.data._id);
-        console.log("newRecordId: ", newRecordId)
-        navigate(`/edit/${newRecordId}`);
+        const newRecord = await createRecordByRecordId(props.data._id);
+        navigate(`/edit/${newRecord.newRecordId}`);
 
         try {
             await countRecord(props.data._id, { click: props.data.click + 1 });
