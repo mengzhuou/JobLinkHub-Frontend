@@ -202,6 +202,27 @@ const getOneRecordByRecordId = async (id) => {
     }
 };
 
+const createRecordByRecordId = async (recordId) => {
+    const token = localStorage.getItem('token'); // Retrieve token from local storage
+    try {
+        const res = await axios.post(
+            `${BACKEND_URL}/records/duplicate/${recordId}`,
+            {}, // No request body needed for this route
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`, // Attach token for protected route
+                },
+            }
+        );
+        return res.data; // Return the response data
+    } catch (error) {
+        console.error('Error creating record by recordId:', error);
+        throw error; // Rethrow the error for handling in the calling function
+    }
+};
+
+
 export {
     verifyGoogleLogin,
     registerUser,
@@ -215,4 +236,5 @@ export {
     deleteRecord,
     updateProfileByNewRecord,
     getOneRecordByRecordId, 
+    createRecordByRecordId
 };
