@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getRecordsByUser, deleteRecord } from '../../../connector'; // Import the functions to get and delete records
+import { getProfileByUserId, deleteRecord } from '../../../connector'; // Import the functions to get and delete records
 import AgGridTable from '../../Functions/Table/AgGridTable/AgGridTable';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
@@ -37,7 +37,7 @@ const ProfilePage = () => {
         return (
             <div className="action-buttons-container">
             <button className="edit-button" onClick={() => handleEdit(params.data._id)}>
-                Edit
+                View
             </button>
             <button className="delete-button" onClick={() => handleDelete(params.data._id)}>
                 Delete
@@ -68,7 +68,7 @@ const ProfilePage = () => {
         },
         { 
             headerName: "Date", 
-            field: "date", 
+            field: "appliedDate", 
             sortable: true, 
             flex: 1.3,
             sort: 'desc',
@@ -98,9 +98,8 @@ const ProfilePage = () => {
         const fetchUserRecords = async () => {
             const userId = JSON.parse(localStorage.getItem('userInfo'))._id; // Get user ID from localStorage
             try {
-                const data = await getRecordsByUser(userId);
-                console.log("userId: ", userId)
-                setRecords(data);
+                const data = await getProfileByUserId(userId);
+                setRecords(data.appliedRecords);
             } catch (err) {
                 setError(err.message);
             } finally {

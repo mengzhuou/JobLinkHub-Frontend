@@ -1,7 +1,8 @@
 import ReactDOM from 'react-dom';
 import React, { useState, useEffect } from 'react';
 import './LinkButton.css';
-import { countRecord, updateApplicationStatus } from '../../../connector';
+import { countRecord, createRecordByRecordId } from '../../../connector';
+import { useNavigate } from 'react-router-dom';
 
 const LinkButton = (props) => {
     const [buttonText, setButtonText] = useState('Apply');
@@ -18,8 +19,9 @@ const LinkButton = (props) => {
             }
         };
         fetchStatus();
-    }, [props.data.isApplied, props.data._id]);
-       
+    }, [props.data]);
+    const navigate = useNavigate();
+
     const handleClick = () => {
         window.open(props.value, '_blank');
         setShowModal(true);
@@ -27,8 +29,10 @@ const LinkButton = (props) => {
     
     const handleYes = async () => {
         setButtonText("Applied");
-        localStorage.setItem(`appliedStatus-${props.data._id}`, 'true');
-        await updateApplicationStatus(props.data._id, true);
+        const newRecordId = await createRecordByRecordId(props.data._id);
+        console.log("newRecordId: ", newRecordId)
+        navigate(`/edit/${newRecordId}`);
+
         try {
             await countRecord(props.data._id, { click: props.data.click + 1 });
         } catch (error) {
@@ -43,7 +47,7 @@ const LinkButton = (props) => {
     const handleNo = async () => {
         setButtonText("Apply");
         localStorage.setItem(`appliedStatus-${props.data._id}`, 'false');
-        await updateApplicationStatus(props.data._id, false);
+        // await updateApplicationStatus(props.data._id, false);
         setShowModal(false);
         if (props.refreshTable) {
             props.refreshTable(); // Refresh the records in the table

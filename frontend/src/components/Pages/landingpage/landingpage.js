@@ -6,7 +6,6 @@ import { verifyGoogleLogin, registerUser, loginUser } from '../../../connector';
 
 const LandingPage = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [userInfo, setUserInfo] = useState(null);
     const [formType, setFormType] = useState('login');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -19,9 +18,9 @@ const LandingPage = () => {
 
         if (storedIsAuthenticated && storedUserInfo) {
             setIsAuthenticated(true);
-            setUserInfo(storedUserInfo);
+            navigate('/MainPage');
         }
-    }, []);
+    }, [navigate]);
 
     const handleLoginSuccess = async (credentialResponse) => {
         const token = credentialResponse.credential;
@@ -33,7 +32,6 @@ const LandingPage = () => {
             localStorage.setItem('token', response.token);
 
             setIsAuthenticated(true);
-            setUserInfo(response.user);
             navigate('/MainPage');
             window.location.reload();
         } catch (error) {
@@ -59,7 +57,6 @@ const LandingPage = () => {
             localStorage.setItem('token', response.token);
 
             setIsAuthenticated(true);
-            setUserInfo(response.user);
             navigate('/MainPage');
             window.location.reload();
         } catch (error) {
@@ -73,13 +70,12 @@ const LandingPage = () => {
         e.preventDefault();
         try {
             const response = await loginUser({ username, password });
-            
+
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userInfo', JSON.stringify(response.user));
             localStorage.setItem('token', response.token);
-            
+
             setIsAuthenticated(true);
-            setUserInfo(response.user);
             navigate('/MainPage');
             window.location.reload();
         } catch (error) {
@@ -95,9 +91,6 @@ const LandingPage = () => {
                 <div className="landing-content">
                     <h1>Welcome to JobLinkHub</h1>
                     <p>Your one-stop solution for job applications and career growth</p>
-                    {isAuthenticated && 
-                        <p>Welcome back, {userInfo.username || userInfo.name}</p>
-                    }
                 </div>
                 {!isAuthenticated && (
                     <div className="auth-container">
@@ -156,11 +149,11 @@ const LandingPage = () => {
                                 onError={handleLoginError}
                             />
                         </div>
-                </div>
+                    </div>
                 )}
             </div>
         </div>
     );
-}
+};
 
 export default LandingPage;

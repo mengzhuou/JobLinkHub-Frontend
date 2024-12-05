@@ -1,163 +1,171 @@
-import React, { Component } from 'react';
-import { createRecord } from '../../../connector.js';
+import React, { useState, useEffect } from 'react';
+import { createRecord, updateProfileByNewRecord } from '../../../connector.js';
+import { useNavigate } from 'react-router-dom';
 import './Application.css';
 
-class ApplicationForm extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            company: '',
-            positionType: '',
-            receivedInterview: '',
-            jobTitle: '',
-            dateApplied: '',
-            applicationLink: '',
-            comment: '',
-            commentLength: 0,
-            commentError: ''
-        };
-    }
+const Application = () => {
+    const navigate = useNavigate();
+    const today = new Date().toISOString().split('T')[0];
+    const [formData, setFormData] = useState({
+        company: '',
+        positionType: '',
+        receivedInterview: '',
+        receivedOffer: '',
+        jobTitle: '',
+        dateApplied: today,
+        applicationLink: '',
+        comment: '',
+    });
+    const [commentLength, setCommentLength] = useState(0);
+    const [commentError, setCommentError] = useState('');
 
-    componentDidMount() {
-        const today = new Date();
-        const localDate = today.getFullYear() + '-' + 
-                          String(today.getMonth() + 1).padStart(2, '0') + '-' + 
-                          String(today.getDate()).padStart(2, '0');
-        document.getElementById("date-applied").setAttribute("max", localDate);
-    }
-    
+    useEffect(() => {
+        document.getElementById('date-applied').setAttribute('max', today);
+    }, [today]);
 
-    handleChange = (e) => {
+    const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === 'comment') {
             const length = value.length;
             if (length > 250) {
-                this.setState({
-                    comment: value.substring(0, 250),
-                    commentLength: 250,
-                    commentError: 'Comment cannot be more than 250 characters'
-                });
+                setFormData({ ...formData, comment: value.substring(0, 250) });
+                setCommentLength(250);
+                setCommentError('Comment cannot be more than 250 characters');
             } else {
-                this.setState({
-                    [name]: value,
-                    commentLength: length,
-                    commentError: ''
-                });
+                setFormData({ ...formData, comment: value });
+                setCommentLength(length);
+                setCommentError('');
             }
         } else {
-            this.setState({ [name]: value });
+            setFormData({ ...formData, [name]: value });
         }
     };
 
-    handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        this.handleCreateRecord();
-    };
-
-    handleCreateRecord = async () => {
-        const userId = JSON.parse(localStorage.getItem('userInfo'))._id;
-        const { company, positionType, receivedInterview, jobTitle, dateApplied, applicationLink, comment } = this.state;
-        const recordData = {
-            company,
-            type: positionType,
-            jobTitle,
-            date: dateApplied,
-            receivedInterview: receivedInterview === 'YES',
-            websiteLink: applicationLink,
-            comment: comment || '',
-            click: 1,
-            appliedBy: [userId]
-        };
-
         try {
-            await createRecord(recordData);
-            alert("Thank you! Your record has been saved.");
-            window.location.href = '/MainPage';
+            const userId = JSON.parse(localStorage.getItem('userInfo'))._id;
+            const recordData = {
+                company: formData.company,
+                type: formData.positionType,
+                jobTitle: formData.jobTitle,
+                appliedDate: formData.dateApplied,
+                receivedInterview: formData.receivedInterview === 'Yes',
+                receivedOffer: formData.receivedOffer === 'Yes',
+                websiteLink: formData.applicationLink,
+                comment: formData.comment || '',
+                click: 1,
+                appliedBy: [userId],
+            };
+
+            const newRecord = await createRecord(recordData);
+
+            // Update the user's profile with the new record ID
+            await updateProfileByNewRecord(userId, { recordId: newRecord._id });
+            alert('Thank you! Your record has been saved.');
+            navigate('/MainPage');
         } catch (error) {
             console.error('Error creating record:', error);
-            alert("Whoops, something is wrong.");
+            alert('Whoops, something is wrong.');
         }
     };
 
-    render() {
-        const { comment, commentError } = this.state;
-
-        return (
-            <div className="application-form-container">
-                <form className="application-form" onSubmit={this.handleSubmit}>
-                    <h2>Add Your Application</h2>
-                    <label>Company<span>*</span></label>
-                    <input
-                        type="text"
-                        name="company"
-                        value={this.state.company}
-                        onChange={this.handleChange}
-                    />
-                    <div className='line'>
+    return (
+        <div className="application-form-container">
+            <form className="application-form" onSubmit={handleSubmit}>
+                <h2>Create Application</h2>
+                <label>Company<span>*</span></label>
+                <input
+                    type="text"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleChange}
+                />
+                <div>
+                    <label>Position Type<span>*</span></label>
+                    <select
+                        name="positionType"
+                        value={formData.positionType}
+                        onChange={handleChange}
+                    >
+                        <option value="">Type of Position</option>
+                        <option value="Intern">Intern</option>
+                        <option value="Part-Time">Part-Time</option>
+                        <option value="Full-Time">Full-Time</option>
+                        <option value="Coop">Coop</option>
+                    </select>
+                </div>
+                <div className="line">
+                    <div>
+                        <label>Received Interview?</label>
+                        <select
+                            name="receivedInterview"
+                            value={formData.receivedInterview}
+                            onChange={handleChange}
+                        >
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    {formData.receivedInterview === 'Yes' && (
                         <div>
-                            <label>PositionType<span>*</span></label>
+                            <label>Received Offer?</label>
                             <select
-                                name="positionType"
-                                value={this.state.positionType}
-                                onChange={this.handleChange}
+                                name="receivedOffer"
+                                value={formData.receivedOffer}
+                                onChange={handleChange}
                             >
-                                <option value="">Type of Position</option>
-                                <option value="Intern">Intern</option>
-                                <option value="Part-Time">Part-Time</option>
-                                <option value="Full-Time">Full-Time</option>
-                                <option value="Coop">Coop</option>
+                                <option value="No">No</option>
+                                <option value="Yes">Yes</option>
                             </select>
                         </div>
-                        <div>
-                            <label>Received Interview?<span>*</span></label>
-                            <select
-                                name="receivedInterview"
-                                value={this.state.receivedInterview}
-                                onChange={this.handleChange}
-                            >
-                                <option value="">Received Interview</option>
-                                <option value="YES">YES</option>
-                                <option value="NO">NO</option>
-                            </select>
-                        </div>
-                    </div>
-                    <label>Job Title<span>*</span></label>
-                    <input
-                        type="text"
-                        name="jobTitle"
-                        value={this.state.jobTitle}
-                        onChange={this.handleChange}
-                    />
-                    <label>Date<span>*</span></label>
-                    <input
-                        type="date"
-                        id="date-applied"
-                        name="dateApplied"
-                        value={this.state.dateApplied}
-                        onChange={this.handleChange}
-                    />
-                    <label>Application Link<span>*</span></label>
-                    <input
-                        type="url"
-                        name="applicationLink"
-                        value={this.state.applicationLink}
-                        onChange={this.handleChange}
-                    />
-                    <label>Comment</label>
-                    <textarea
-                        name="comment"
-                        value={this.state.comment}
-                        onChange={this.handleChange}
-                    />
-                    <div className="comment-info">
-                        <span>{comment.length}/250</span>
-                        {commentError && <span className="error-message">{commentError}</span>}
-                    </div>
-                    <button type="submit" className="submit-button">Submit Application</button>
-                </form>
-            </div>
-        );
-    }
-}
+                    )}
+                </div>
+                <label>Job Title<span>*</span></label>
+                <input
+                    type="text"
+                    name="jobTitle"
+                    value={formData.jobTitle}
+                    onChange={handleChange}
+                />
+                <label>Date<span>*</span></label>
+                <input
+                    type="date"
+                    id="date-applied"
+                    name="dateApplied"
+                    value={formData.dateApplied}
+                    onChange={handleChange}
+                />
+                <label>Application Link<span>*</span></label>
+                <input
+                    type="url"
+                    name="applicationLink"
+                    value={formData.applicationLink}
+                    onChange={handleChange}
+                />
+                <label>Comment</label>
+                <textarea
+                    name="comment"
+                    value={formData.comment}
+                    onChange={handleChange}
+                />
+                <div className="comment-info">
+                    <span>{commentLength}/250</span>
+                    {commentError && <span className="error-message">{commentError}</span>}
+                </div>
+                <div className="bottom-btn">
+                    <button
+                        type="button"
+                        className="application-cancel-button"
+                        onClick={() => navigate('/MainPage')}
+                    >
+                        Cancel
+                    </button>
+                    <button type="submit" className="application-submit-button">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    );
+};
 
-export default ApplicationForm;
+export default Application;

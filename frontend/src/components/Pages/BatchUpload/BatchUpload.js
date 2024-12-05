@@ -54,10 +54,10 @@ class BatchUpload extends Component {
 
         for (const record of batchRecords) {
             let validDate;
-            if (typeof record.date === 'number') {
-                validDate = new Date((record.date - (25567 + 2)) * 86400 * 1000).toISOString().split('T')[0];
-            } else if (record.date) {
-                validDate = new Date(record.date).toISOString().split('T')[0];
+            if (typeof record.appliedDate === 'number') {
+                validDate = new Date((record.appliedDate - (25567 + 2)) * 86400 * 1000).toISOString().split('T')[0];
+            } else if (record.appliedDate) {
+                validDate = new Date(record.appliedDate).toISOString().split('T')[0];
             } else {
                 validDate = 'Unknown Date';
             }
@@ -74,7 +74,7 @@ class BatchUpload extends Component {
                 company: record.Company || 'Unknown Company',
                 type: record.type || 'Unknown Type',
                 jobTitle: record['Job Title'] || 'Unknown Job Title',
-                date: validDate,
+                appliedDate: validDate,
                 receivedInterview: receivedInterview || false,
                 websiteLink: applicationLink,
                 comment: record.comment || '',
