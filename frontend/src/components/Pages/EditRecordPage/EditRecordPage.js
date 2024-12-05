@@ -36,6 +36,8 @@ const EditRecordForm = () => {
                     appliedDate: recordData.appliedDate
                         ? new Date(recordData.appliedDate).toISOString().split('T')[0]
                         : '',
+                    receivedInterview: recordData.receivedInterview ? 'Yes' : 'No', 
+                    receivedOffer: recordData.receivedOffer ? 'Yes' : 'No',
                 });
                 setCommentLength(recordData.comment.length);
             } catch (error) {
@@ -95,8 +97,10 @@ const EditRecordForm = () => {
             alert('Failed to update record. Please try again.');
         }
     };
+    console.log("record: ", record)
 
     return (
+        
         <div className="application-form-container">
             <form className="application-form" onSubmit={handleSubmit}>
                 <h2>Edit Application</h2>
