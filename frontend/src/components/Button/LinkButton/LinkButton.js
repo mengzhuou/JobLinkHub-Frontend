@@ -10,6 +10,8 @@ const LinkButton = (props) => {
     useEffect(() => {
         const fetchStatus = async () => {
             try {
+                console.log("props.data: ", props.data)
+                console.log("props.data.isApplied: ", props.data.isApplied)
                 const status = props.data.isApplied;
                 setButtonText(status ? 'Applied' : 'Apply');
                 localStorage.setItem(`appliedStatus-${props.data._id}`, status ? 'true' : 'false');

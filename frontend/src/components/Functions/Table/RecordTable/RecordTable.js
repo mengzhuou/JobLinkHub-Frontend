@@ -89,7 +89,7 @@ class RecordTable extends Component {
                 if (records.length > 0) {
                     const updatedRecords = records.map(record => ({
                         ...record,
-                        isApplied: localStorage.getItem(`appliedStatus-${record._id}`) === 'true' || record.isApplied,
+                        isApplied: record.isApplied,
                     }));
                     this.setState({ records: updatedRecords });
                     return true; 
