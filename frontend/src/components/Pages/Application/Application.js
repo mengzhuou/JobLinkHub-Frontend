@@ -73,7 +73,7 @@ const Application = () => {
     return (
         <div className="application-form-container">
             <form className="application-form" onSubmit={handleSubmit}>
-                <h2>Add Your Application</h2>
+                <h2>Create Application</h2>
                 <label>Company<span>*</span></label>
                 <input
                     type="text"
@@ -157,7 +157,7 @@ const Application = () => {
                     <button
                         type="button"
                         className="application-cancel-button"
-                        onClick={() => navigate('/profile')}
+                        onClick={() => navigate('/MainPage')}
                     >
                         Cancel
                     </button>
