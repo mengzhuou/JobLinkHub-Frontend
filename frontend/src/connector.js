@@ -96,14 +96,16 @@ const createRecord = async (data) => {
         const res = await axios.post(`${BACKEND_URL}/records`, data, {
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`, // Attach token
+                Authorization: `Bearer ${token}`,
             },
         });
         return res.data;
     } catch (error) {
+        console.error('Error in createRecord:', error.response?.data || error.message);
         throw error;
     }
 };
+
 
 // Update an existing record (protected route)
 const updateRecord = async (id, data) => {
@@ -170,23 +172,6 @@ const deleteRecord = async (id) => {
     }
 };
 
-
-const updateProfileByNewRecord = async (userId, recordId) => {
-    const token = localStorage.getItem('token');
-    try {
-        const res = await axios.post(`${BACKEND_URL}/profiles/${userId}/new-record`, recordId, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`, // Attach token for protected route
-            },
-        });
-        return res.data;
-    } catch (error) {
-        console.error("Error updating profile with new record:", error);
-        throw error;
-    }
-};
-
 const getOneRecordByRecordId = async (id) => {
     const token = localStorage.getItem('token');
     try {
@@ -234,7 +219,6 @@ export {
     countRecord,
     getProfileByUserId,
     deleteRecord,
-    updateProfileByNewRecord,
     getOneRecordByRecordId, 
     createRecordByRecordId
 };

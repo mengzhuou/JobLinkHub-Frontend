@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createRecord, updateProfileByNewRecord } from '../../../connector.js';
+import { createRecord } from '../../../connector.js';
 import { useNavigate } from 'react-router-dom';
 import './Application.css';
 
@@ -58,11 +58,9 @@ const Application = () => {
                 appliedBy: [userId],
             };
 
-            const newRecord = await createRecord(recordData);
+            await createRecord(recordData);
 
-            // Update the user's profile with the new record ID
-            await updateProfileByNewRecord(userId, { recordId: newRecord._id });
-            alert('Thank you! Your record has been saved.');
+            alert('Your record has been saved.');
             navigate('/MainPage');
         } catch (error) {
             console.error('Error creating record:', error);
