@@ -72,7 +72,7 @@ const ProfilePage = () => {
             field: "jobTitle", 
             sortable: true, 
             filter: true, 
-            flex: 2,
+            flex: 1.5,
             tooltipField: "jobTitle",
             valueFormatter: (params) => {
                 if (params.value) {
