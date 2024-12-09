@@ -163,7 +163,7 @@ class BatchUpload extends Component {
     render() {
         return (
             <div className="batch-upload-container">
-                <h2>Batch Upload Applications</h2>
+                <h2>Batch Upload Application</h2>
                 <input type="file" onChange={this.handleFileUpload} />
                 <button className="batch-submit-button" onClick={this.handleBatchSubmit}>Submit Batch</button>
             </div>
