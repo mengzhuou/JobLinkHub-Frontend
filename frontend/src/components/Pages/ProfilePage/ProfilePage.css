@@ -16,7 +16,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     gap: 10px;                
 }
 
-.edit-button, .delete-button {
+.edit-button, .delete-button, .link-button {
     padding: 6px 10px;
     font-size: 14px;
     font-weight: 500;
@@ -33,6 +33,15 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 .edit-button:hover {
     background-color: #45a049; 
+}
+
+.link-button {
+    background-color: #0060b9; 
+    color: white;
+}
+
+.link-button:hover {
+    background-color: #03529c; 
 }
 
 .delete-button {

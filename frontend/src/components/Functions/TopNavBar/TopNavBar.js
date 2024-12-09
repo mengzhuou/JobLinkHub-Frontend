@@ -103,9 +103,9 @@ class TopNavBar extends Component {
                                 {isAuthenticated ? (
                                     <>
                                         <div className="dropdown-content" onClick={this.mainpageNav}>Main Page</div>                                        
-                                        <div className="dropdown-content" onClick={this.applicationNav}>Application</div>
+                                        <div className="dropdown-content" onClick={this.applicationNav}>Create Application</div>
+                                        <div className="dropdown-content" onClick={this.profileNav}>Applied Application</div>
                                         <div className="dropdown-content" onClick={this.batchUploadNav}>Batch Upload</div>
-                                        <div className="dropdown-content" onClick={this.profileNav}>Profile</div>
                                         <div className="dropdown-content" onClick={this.logoutNav}>Logout</div>
                                     </>
                                 ) : (

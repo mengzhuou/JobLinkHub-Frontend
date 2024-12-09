@@ -33,16 +33,34 @@ const ProfilePage = () => {
         }
     };
 
+    const handleOpenLink = async (websiteLink) => {
+        if (websiteLink) {
+            window.open(websiteLink, '_blank');
+        } else {
+            alert('No valid URL provided');
+        }
+    };
+    
     const ActionCellRenderer = (params) => {
         return (
             <div className="action-buttons-container">
-            <button className="edit-button" onClick={() => handleEdit(params.data._id)}>
-                View
-            </button>
-            <button className="delete-button" onClick={() => handleDelete(params.data._id)}>
-                Delete
-            </button>
-        </div>
+                <button className="edit-button" onClick={() => handleEdit(params.data._id)}>
+                    Edit
+                </button>
+                <button className="delete-button" onClick={() => handleDelete(params.data._id)}>
+                    Delete
+                </button>
+            </div>
+        );
+    };
+
+    const WebsiteLinkCellRenderer = (params) => {
+        return (
+            <div className="action-buttons-container">
+                <button className="link-button" onClick={() => handleOpenLink(params.data.websiteLink)}>
+                    Link
+                </button>
+            </div>
         );
     };
 
@@ -54,7 +72,7 @@ const ProfilePage = () => {
             field: "jobTitle", 
             sortable: true, 
             filter: true, 
-            flex: 2,
+            flex: 1.5,
             tooltipField: "jobTitle",
             valueFormatter: (params) => {
                 if (params.value) {
@@ -87,6 +105,12 @@ const ProfilePage = () => {
             }
         },
         {
+            headerName: "Website",
+            field: "websiteLink",
+            flex: 1,
+            cellRenderer: WebsiteLinkCellRenderer,
+        },
+        {
             headerName: "Actions",
             field: "actions",
             flex: 1,
@@ -114,7 +138,7 @@ const ProfilePage = () => {
 
 return (
     <div className="profile-page">
-        <h1>Applied Applications</h1>
+        <h1>Applied Application</h1>
         <div className="profile-table-container">
             <div className="profile-table">
             <div className="ag-theme-alpine" style={{ height: 500, width: '100%' }}>
