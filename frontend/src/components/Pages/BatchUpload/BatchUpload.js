@@ -7,7 +7,10 @@ class BatchUpload extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            batchRecords: [] // Stores records from the uploaded file
+            batchRecords: [], // Stores records from the uploaded file
+            skippedRecords: [], // Stores skipped records and reasons
+            isLoading: false, // Controls the loading state
+            showHelp: false, // Controls the help overlay visibility
         };
     }
 
@@ -23,7 +26,7 @@ class BatchUpload extends Component {
         } else if (fileType === 'json') {
             this.readJSONFile(file);
         } else {
-            alert('Unsupported file format. Please upload an Excel, CSV, or JSON file.');
+            console.warn('Unsupported file format. Please upload an Excel, CSV, or JSON file.');
         }
     };
 
@@ -37,7 +40,7 @@ class BatchUpload extends Component {
             const jsonData = XLSX.utils.sheet_to_json(sheet);
 
             if (jsonData.length === 0) {
-                alert('Error: The uploaded Excel file is empty.');
+                console.warn('Error: The uploaded Excel file is empty.');
                 return;
             }
 
@@ -51,35 +54,23 @@ class BatchUpload extends Component {
         reader.onload = (event) => {
             const text = event.target.result;
             const rows = text.split('\n').map(row => row.split(','));
-            const headers = rows.shift(); // Assume the first row contains column names
+            const headers = rows.shift();
             const jsonData = rows.map(row => {
                 return headers.reduce((acc, header, index) => {
-                    acc[header.trim()] = row[index]?.trim() || ''; // Use empty string for missing fields
+                    acc[header.trim()] = row[index]?.trim() || '';
                     return acc;
                 }, {});
             });
-    
-            // Fill missing fields with default values, similar to Excel logic
-            const normalizedData = jsonData.map(record => ({
-                Company: record['Company'] || 'Unknown Company',
-                Type: record['Type'] || 'Unknown Type',
-                'Job Title': record['Job Title'] || 'Unknown Job Title',
-                'Date Applied': record['Date Applied'] || 'Unknown Date',
-                Interview: record['Interview'] || 'No', // Default empty Interview to 'No'
-                Website: record['Website'] || '',
-                Comment: record['Comment'] || '',
-            }));
-    
-            if (normalizedData.length === 0) {
-                alert('Error: The uploaded CSV file is empty.');
+
+            if (jsonData.length === 0) {
+                console.warn('Error: The uploaded CSV file is empty.');
                 return;
             }
-    
-            this.setState({ batchRecords: normalizedData });
+
+            this.setState({ batchRecords: jsonData });
         };
         reader.readAsText(file);
     };
-    
 
     readJSONFile = (file) => {
         const reader = new FileReader();
@@ -88,13 +79,13 @@ class BatchUpload extends Component {
                 const jsonData = JSON.parse(event.target.result);
 
                 if (!Array.isArray(jsonData) || jsonData.length === 0) {
-                    alert('Error: The uploaded JSON file is empty or invalid.');
+                    console.warn('Error: The uploaded JSON file is empty or invalid.');
                     return;
                 }
 
                 this.setState({ batchRecords: jsonData });
             } catch (error) {
-                alert('Error: Invalid JSON file format.');
+                console.warn('Error: Invalid JSON file format.');
             }
         };
         reader.readAsText(file);
@@ -119,11 +110,29 @@ class BatchUpload extends Component {
         click: 1,
     });
 
+    retry = async (fn, retries = 3) => {
+        for (let i = 0; i < retries; i++) {
+            try {
+                return await fn();
+            } catch (error) {
+                if (i === retries - 1) throw error;
+            }
+        }
+    };
+
+    delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
     handleBatchSubmit = async () => {
+        this.setState({ isLoading: true });
         const { batchRecords } = this.state;
+        const skippedRecords = [];
+        const batchSize = 1;
+        const delayTime = 1500;
+        let successfulUploads = 0;
 
         if (batchRecords.length === 0) {
-            alert("Error: No records to upload. Please check your file.");
+            console.warn('Error: No records to upload. Please check your file.');
+            this.setState({ isLoading: false });
             return;
         }
 
@@ -136,39 +145,93 @@ class BatchUpload extends Component {
             }
         };
 
-        for (const record of batchRecords) {
-            const recordData = this.mapFields(record);
+        for (let i = 0; i < batchRecords.length; i += batchSize) {
+            const batch = batchRecords.slice(i, i + batchSize);
 
-            if (!isValidURL(recordData.websiteLink)) {
-                console.warn('Skipping record due to invalid or missing application link:', record);
-                continue;
-            }
+            const uploadPromises = batch.map(async (record) => {
+                const recordData = this.mapFields(record);
 
-            try {
-                if (recordData.company !== 'Unknown Company' && recordData.type !== 'Unknown Type') {
-                    await createRecord(recordData);
-                } else {
-                    console.warn('Skipping record due to missing fields:', recordData);
+                if (!isValidURL(recordData.websiteLink)) {
+                    skippedRecords.push({ record, reason: 'Invalid or missing application link' });
+                    return null;
                 }
-            } catch (error) {
-                console.error('Error uploading record:', error);
-                alert(`Error uploading record for company: ${recordData.company}`);
+
+                try {
+                    return await this.retry(() => createRecord(recordData));
+                } catch (error) {
+                    skippedRecords.push({ record: recordData, reason: `Error uploading record: ${error.message}` });
+                    return null;
+                }
+            });
+
+            const results = await Promise.all(uploadPromises);
+            successfulUploads += results.filter(result => result !== null).length;
+
+            if (i + batchSize < batchRecords.length) {
+                await this.delay(delayTime);
             }
         }
 
-        alert('Batch upload complete.');
+        this.setState({ skippedRecords, isLoading: false });
+        console.warn('Skipped Records:', skippedRecords);
+        alert(`Batch upload complete. Successfully uploaded ${successfulUploads} records.`);
         window.location.href = '/MainPage';
     };
 
     render() {
+        const { isLoading, showHelp } = this.state;
+
         return (
             <div className="batch-upload-container">
-                <h2>Batch Upload Application</h2>
-                <input type="file" onChange={this.handleFileUpload} />
-                <button className="batch-submit-button" onClick={this.handleBatchSubmit}>Submit Batch</button>
+                {isLoading && (
+                    <div className="loading-overlay">
+                        <div className="loading-spinner"></div>
+                        <p>Uploading records, please wait...</p>
+                    </div>
+                )}
+                {showHelp && (
+                    <div className="help-overlay" onClick={() => this.setState({ showHelp: false })}>
+                        <div className="help-content" onClick={(e) => e.stopPropagation()}>
+                            <h3>How to Use</h3>
+                            <p>You can upload files in the following formats:</p>
+                            <ul>
+                                <li>Excel (.xlsx, .xls)</li>
+                                <li>CSV (.csv)</li>
+                                <li>JSON (.json)</li>
+                            </ul>
+                            <p>
+                                Ensure your file contains column headers: <strong>Company</strong>,{' '}
+                                <strong>Job Title</strong>, <strong>Type</strong>, <strong>Website</strong>, and{' '}
+                                <strong>Comment</strong>.
+                            </p>
+                            <p><strong>Steps to Upload:</strong></p>
+                            <ol>
+                                <li>Click the "Choose File" button to select a supported file from your computer.</li>
+                                <li>Ensure the file contains valid and complete data.</li>
+                                <li>Click the "Submit Batch" button to start uploading records.</li>
+                            </ol>
+
+                            <button onClick={() => this.setState({ showHelp: false })}>Close</button>
+                        </div>
+                    </div>
+                )}
+                <div className="header">
+                    <h2>Batch Upload Application</h2>
+                    <button
+                        className="help-icon"
+                        onClick={() => this.setState({ showHelp: true })}
+                    >
+                        ?
+                    </button>
+                </div>
+                <input type="file" onChange={this.handleFileUpload} disabled={isLoading} />
+                <button className="batch-submit-button" onClick={this.handleBatchSubmit} disabled={isLoading}>
+                    Submit Batch
+                </button>
             </div>
         );
     }
 }
+
 
 export default BatchUpload;
